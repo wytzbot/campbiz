@@ -152,9 +152,15 @@ Verify the Google identity server-side before granting privileges.
 - Business text is escaped before being inserted into generated cards.
 - PWA uses 192px/512px PNG icons for broader install compatibility.
 - Service worker uses a versioned cache and does not cache failed responses.
-- FCM client code checks browser permission/support and verifies the token endpoint response.
+- FCM client code imports the embedded public Firebase config/VAPID key, checks browser permission/support, reuses an existing Firebase app when available, and verifies the token endpoint response.
 - `robots.txt` contains no fake domain placeholder.
 
 
 ## Configuration policy
 Public Firebase Web SDK configuration is stored in `firebase-config.js` and is not a Vercel secret. Firebase Admin credentials, Google OAuth secrets, and Flutterwave secrets remain server-side.
+
+
+## FCM backend configuration
+The included `/api/fcm/token` endpoint securely registers browser FCM tokens in Firestore. It never exposes Firebase Admin credentials to the browser.
+
+Configure either `FIREBASE_SERVICE_ACCOUNT_JSON` (the complete service-account JSON) **or** these three Vercel server-side variables: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`. Keep all of them secret. The public Firebase Web SDK config and VAPID public key remain in the client files.

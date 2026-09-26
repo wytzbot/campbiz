@@ -10,5 +10,6 @@ const OWNER_EMAIL = "ilemobayotolulope11092003@gmail.com";
 // FLW_WEBHOOK_HASH=
 // APP_URL=https://YOUR-DOMAIN.name.ng
 // APP_NAME=CampBiz
-// Do not put public Firebase Web SDK config in Vercel env; it lives in firebase-config.js.
+// Public Firebase Web SDK config is embedded in firebase-config.js and firebase-messaging-sw.js.
+// Do not add those public Firebase Web SDK values to Vercel environment variables.
 // Never put Firebase Admin credentials in client-side files.

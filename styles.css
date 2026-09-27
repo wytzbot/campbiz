@@ -15,4 +15,10 @@
 .google-btn:disabled{opacity:.65;cursor:wait}
 .google-g{font-family:Arial,sans-serif;font-weight:800;font-size:1.25rem;color:#4285f4;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .auth-status{font-size:.85rem;min-height:1.2em;margin:10px 0 0;color:#f2eaff}
-\n.subscription-price{margin:18px 0;padding:18px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--surface,#f8f8f8)}.subscription-price h3{font-size:1.8rem;margin:8px 0}.subscription-price h3 small{font-size:.85rem;font-weight:500}.owner-card #subscribeAnnual{margin-top:10px}\n
+.subscription-price{margin:18px 0;padding:18px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--surface,#f8f8f8)}.subscription-price h3{font-size:1.8rem;margin:8px 0}.subscription-price h3 small{font-size:.85rem;font-weight:500}.owner-card #subscribeAnnual{margin-top:10px}
+
+.drawer{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+main{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.skip-link{display:block;margin:14px auto 0;background:transparent;border:0;color:#d8c8ff;text-decoration:underline;font-size:.92rem;cursor:pointer;padding:6px}
+.skip-link:hover{color:#fff}
+.modal-card{max-height:88vh;overflow-y:auto}

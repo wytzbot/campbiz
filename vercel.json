@@ -1,0 +1,10 @@
+{
+  "headers": [
+    {
+      "source": "/(index.html|app.js|sw.js|firebase-messaging-sw.js|manifest.json)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+      ]
+    }
+  ]
+}

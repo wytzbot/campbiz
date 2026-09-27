@@ -71,4 +71,8 @@ $("#menuBtn").onclick=()=>{$("#drawer").classList.add("open");$("#drawer").setAt
   getRedirectResult(auth).then(result=>{if(result?.user){state.user=result.user;localStorage.setItem("cbc_user",JSON.stringify({uid:result.user.uid,name:result.user.displayName||"",email:result.user.email||"",photoURL:result.user.photoURL||""}));goSchoolPicker();}}).catch(error=>{console.error("Google redirect sign-in error",error);});$("#subscribeAnnual").onclick=startAnnualSubscription;$("#adMenu").onclick=openAdComingSoon;window.addEventListener("hashchange",route);setup();route();
 const rotating=["Find food, services and useful businesses around your school.","Compare campus services before you spend.","Save useful businesses for later.","Discover what students around you are using.","Get quick access to free student tools."];let rotateIndex=0;setInterval(()=>{const el=$("#rotatingText");if(!el||$("#welcomeScreen").classList.contains("hidden"))return;rotateIndex=(rotateIndex+1)%rotating.length;el.animate([{opacity:1,transform:"translateY(0)"},{opacity:0,transform:"translateY(8px)"}],{duration:180}).finished.then(()=>{el.textContent=rotating[rotateIndex];el.animate([{opacity:0,transform:"translateY(-8px)"},{opacity:1,transform:"translateY(0)"}],{duration:220})}).catch(()=>{el.textContent=rotating[rotateIndex]})},2800);
 $("#fypSearch").oninput=e=>{if(e.target.value.trim()){$("#searchInput").value=e.target.value;renderResults()}};
-if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("serviceWorker" in navigator){
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(refreshing)return;refreshing=true;location.reload()});
+  navigator.serviceWorker.register("./sw.js").then(reg=>{reg.update().catch(()=>{})}).catch(()=>{});
+}

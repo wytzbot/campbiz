@@ -1,0 +1,17 @@
+const admin=require('firebase-admin');
+function getAdminApp(){if(admin.apps.length)return admin.app();let s;if(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)s=JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);else{const{FIREBASE_PROJECT_ID,FIREBASE_CLIENT_EMAIL,FIREBASE_PRIVATE_KEY}=process.env;if(!FIREBASE_PROJECT_ID||!FIREBASE_CLIENT_EMAIL||!FIREBASE_PRIVATE_KEY)throw new Error('Firebase Admin environment variables are not configured.');s={projectId:FIREBASE_PROJECT_ID,clientEmail:FIREBASE_CLIENT_EMAIL,privateKey:FIREBASE_PRIVATE_KEY.replace(/\\n/g,'\n')}}return admin.initializeApp({credential:admin.credential.cert(s)})}
+function reply(res,status,body){res.setHeader('Cache-Control','no-store');return res.status(status).json(body)}
+const PLANS={monthly:process.env.PAYSTACK_MONTHLY_PLAN_CODE||'PLN_l3x2lebuzk6dzqw',annual:process.env.PAYSTACK_ANNUAL_PLAN_CODE||'PLN_9b33lqkxewk4hh8'};
+module.exports=async function handler(req,res){
+ if(req.method!=='POST'){res.setHeader('Allow','POST');return reply(res,405,{ok:false,error:'Method not allowed.'})}
+ try{
+  const b=req.headers.authorization||'';if(!b.startsWith('Bearer '))return reply(res,401,{ok:false,error:'Google sign-in is required.'});const app=getAdminApp();const decoded=await admin.auth(app).verifyIdToken(b.slice(7));const db=admin.firestore(app);const ref=db.collection('billingCustomers').doc(decoded.uid);const snap=await ref.get();if(!snap.exists)return reply(res,404,{ok:false,error:'Billing profile not found.'});const d=snap.data();
+  if(d.subscriptionStatus==='active'&&d.paystackSubscriptionCode)return reply(res,200,{ok:true,active:true,message:'Your subscription is already active.'});
+  if(!d.trialEndsAt?.toMillis||d.trialEndsAt.toMillis()>Date.now())return reply(res,409,{ok:false,error:'Your free trial has not ended yet.'});
+  if(!d.trialBillingReady||!d.authorizationCode||!d.paystackCustomerCode)return reply(res,409,{ok:false,error:'Billing has not been enrolled. Please set up your payment method first.'});
+  const plan=d.selectedPlan||d.plan||'monthly',planCode=PLANS[plan],secret=process.env.PAYSTACK_SECRET_KEY;if(!planCode||!secret)return reply(res,503,{ok:false,error:'Paystack billing is not configured.'});
+  const r=await fetch('https://api.paystack.co/subscription',{method:'POST',headers:{Authorization:`Bearer ${secret}`,'Content-Type':'application/json'},body:JSON.stringify({customer:d.paystackCustomerCode,plan:planCode,authorization:d.authorizationCode,start_date:new Date().toISOString()})});const x=await r.json().catch(()=>({}));if(!r.ok||!x.status)return reply(res,502,{ok:false,error:String(x.message||'Paystack could not start the subscription.')});
+  await ref.set({subscriptionStatus:'active',plan,planCode,paystackSubscriptionCode:x.data?.subscription_code||null,nextPaymentDate:x.data?.next_payment_date||null,trialBillingReady:false,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
+  return reply(res,200,{ok:true,active:true,plan,subscriptionCode:x.data?.subscription_code||null,nextPaymentDate:x.data?.next_payment_date||null,message:'Your free trial has ended and the selected Paystack subscription is now active.'});
+ }catch(e){console.error('Activate trial error',e);return reply(res,500,{ok:false,error:'Unable to start your recurring subscription.'})}
+};

@@ -3,8 +3,17 @@
     {
       "source": "/(index.html|app.js|sw.js|firebase-messaging-sw.js|manifest.json)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
       ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/subscription-trials",
+      "schedule": "0 0 * * *"
     }
   ]
 }

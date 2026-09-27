@@ -1,0 +1,21 @@
+const admin=require('firebase-admin');
+function getAdminApp(){if(admin.apps.length)return admin.app();let s;if(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)s=JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);else{const{FIREBASE_PROJECT_ID,FIREBASE_CLIENT_EMAIL,FIREBASE_PRIVATE_KEY}=process.env;if(!FIREBASE_PROJECT_ID||!FIREBASE_CLIENT_EMAIL||!FIREBASE_PRIVATE_KEY)throw new Error('Firebase Admin environment variables are not configured.');s={projectId:FIREBASE_PROJECT_ID,clientEmail:FIREBASE_CLIENT_EMAIL,privateKey:FIREBASE_PRIVATE_KEY.replace(/\\n/g,'\n')}}return admin.initializeApp({credential:admin.credential.cert(s)})}
+function reply(res,status,body){res.setHeader('Cache-Control','no-store');return res.status(status).json(body)}
+module.exports=async function handler(req,res){
+ if(req.method!=='POST'){res.setHeader('Allow','POST');return reply(res,405,{ok:false,error:'Method not allowed.'})}
+ try{
+  const b=req.headers.authorization||'';if(!b.startsWith('Bearer '))return reply(res,401,{ok:false,error:'Google sign-in is required.'});const app=getAdminApp();const decoded=await admin.auth(app).verifyIdToken(b.slice(7));const reference=String(req.body?.reference||'');
+  if(!/^[A-Za-z0-9_-]{8,80}$/.test(reference))return reply(res,400,{ok:false,error:'Invalid payment reference.'});const db=admin.firestore(app);const paymentRef=db.collection('subscriptionPayments').doc(reference);const snap=await paymentRef.get();if(!snap.exists||snap.data().uid!==decoded.uid)return reply(res,404,{ok:false,error:'Payment was not found.'});const expected=snap.data();
+  if(expected.status==='verified')return reply(res,200,{ok:true,active:true,plan:expected.plan,subscriptionEndsAt:expected.subscriptionEndsAt||null,message:'Payment was already verified.'});
+  const secret=process.env.PAYSTACK_SECRET_KEY;if(!secret)return reply(res,503,{ok:false,error:'Paystack secret key is not configured.'});const response=await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`,{headers:{Authorization:`Bearer ${secret}`}});const result=await response.json().catch(()=>({}));const tx=result.data||{};
+  if(!response.ok||!result.status)return reply(res,502,{ok:false,error:'Paystack verification failed. Please try again.'});
+  if(tx.reference!==reference||String(tx.status).toLowerCase()!=='success'||String(tx.currency||'').toUpperCase()!=='NGN')return reply(res,400,{ok:false,error:'Payment has not been successfully verified.'});
+  if(expected.planCode&&tx.plan_code&&tx.plan_code!==expected.planCode)return reply(res,400,{ok:false,error:'The verified payment does not match the selected plan.'});
+  let subscription=null;if(tx.subscription_code){const sr=await fetch(`https://api.paystack.co/subscription/${encodeURIComponent(tx.subscription_code)}`,{headers:{Authorization:`Bearer ${secret}`}});const sd=await sr.json().catch(()=>({}));if(sr.ok&&sd.status)subscription=sd.data||null;}
+  const next=subscription?.next_payment_date||tx.subscription?.next_payment_date||tx.next_payment_date||null;const end=next?admin.firestore.Timestamp.fromDate(new Date(next)):null;
+  if(!end)return reply(res,409,{ok:false,error:'Payment succeeded, but Paystack has not returned the recurring subscription date yet. Please refresh shortly.'});
+  await paymentRef.set({status:'verified',providerTransactionId:tx.id||null,verifiedAt:admin.firestore.FieldValue.serverTimestamp(),authorizationCode:tx.authorization?.authorization_code||null,paystackSubscriptionCode:tx.subscription_code||null,subscriptionEndsAt:end},{merge:true});
+  await db.collection('billingCustomers').doc(decoded.uid).set({uid:decoded.uid,email:decoded.email||null,provider:'paystack',plan:expected.plan,planCode:expected.planCode,subscriptionStatus:'active',subscriptionEndsAt:end,paystackCustomerCode:tx.customer?.customer_code||null,paystackSubscriptionCode:tx.subscription_code||null,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
+  return reply(res,200,{ok:true,active:true,plan:expected.plan,subscriptionEndsAt:end.toDate().toISOString(),message:'Payment verified and Pro access is active.'});
+ }catch(error){console.error('Paystack verification error:',error);return reply(res,500,{ok:false,error:'Unable to verify this Paystack payment.'})}
+};

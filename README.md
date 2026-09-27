@@ -197,3 +197,11 @@ The backend now includes `POST /api/subscription/authorize` for charge challenge
 Published business listings are stored as metadata/reference documents in the Firestore `publishedListings` collection. Images are not stored in Firestore. The browser resizes/crops featured images to 1280x720 and product images to 1200x900, then iteratively JPEG-compresses each image to 450 KB or less before upload. The Drive upload endpoint rejects image payloads over 550 KB as a second safety check. Firestore stores only the Drive image IDs/URLs and listing metadata.
 
 The existing `/api/storage/upload` serverless function handles Drive status/connect/upload plus published-listing writes and public listing reads, so the project remains at 10 API functions.
+
+
+## Final interaction fixes
+- Owner Google sign-in uses a direct shared authentication handler; mobile uses redirect and desktop uses popup with fallback.
+- School picker supports search, type filters, and up to 80 visible matches per query.
+- Menu renders the complete category list rather than truncating it to 12.
+- Dashboard uses a 4-step owner workflow and clearer Drive/listing status.
+- API count remains 10.

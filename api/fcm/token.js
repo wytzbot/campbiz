@@ -39,6 +39,9 @@ module.exports = async function handler(req, res) {
 
   try {
     const body = req.body || {};
+    const bearer = req.headers.authorization || '';
+    let uid = null;
+    if (bearer.startsWith('Bearer ')) { try { uid = (await getAdminApp() && await admin.auth(getAdminApp()).verifyIdToken(bearer.slice(7))).uid; } catch {} }
     const token = typeof body.token === 'string' ? body.token.trim() : '';
     const schoolId = typeof body.schoolId === 'string' ? body.schoolId.trim() : '';
     const anonymousId = typeof body.anonymousId === 'string' ? body.anonymousId.trim() : '';
@@ -58,6 +61,7 @@ module.exports = async function handler(req, res) {
       token,
       schoolId: schoolId || null,
       anonymousId: anonymousId || null,
+      uid,
       platform: 'web',
       userAgent: typeof req.headers['user-agent'] === 'string' ? req.headers['user-agent'].slice(0, 500) : null,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),

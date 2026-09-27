@@ -1,0 +1,1598 @@
+[
+  {
+    "name": "University of Ibadan",
+    "shortName": "UI",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Obafemi Awolowo University",
+    "shortName": "OAU",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "University of Lagos",
+    "shortName": "UNILAG",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "University of Nigeria, Nsukka",
+    "shortName": "UNN",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Federal University of Technology, Akure",
+    "shortName": "FUTA",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Lagos State University",
+    "shortName": "LASU",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "University of Ilorin",
+    "shortName": "UNILORIN",
+    "type": "University",
+    "state": "Kwara"
+  },
+  {
+    "name": "Ahmadu Bello University",
+    "shortName": "ABU",
+    "type": "University",
+    "state": "Kaduna"
+  },
+  {
+    "name": "University of Benin",
+    "shortName": "UNIBEN",
+    "type": "University",
+    "state": "Edo"
+  },
+  {
+    "name": "University of Port Harcourt",
+    "shortName": "UNIPORT",
+    "type": "University",
+    "state": "Rivers"
+  },
+  {
+    "name": "University of Abuja",
+    "shortName": "UNIABUJA",
+    "type": "University",
+    "state": "FCT"
+  },
+  {
+    "name": "Nnamdi Azikiwe University",
+    "shortName": "UNIZIK",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "University of Calabar",
+    "shortName": "UNICAL",
+    "type": "University",
+    "state": "Cross River"
+  },
+  {
+    "name": "University of Jos",
+    "shortName": "UNIJOS",
+    "type": "University",
+    "state": "Plateau"
+  },
+  {
+    "name": "University of Maiduguri",
+    "shortName": "UNIMAID",
+    "type": "University",
+    "state": "Borno"
+  },
+  {
+    "name": "Bayero University Kano",
+    "shortName": "BUK",
+    "type": "University",
+    "state": "Kano"
+  },
+  {
+    "name": "University of Nigeria, Enugu Campus",
+    "shortName": "UNEC",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Federal University of Agriculture, Abeokuta",
+    "shortName": "FUNAAB",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal University of Technology, Minna",
+    "shortName": "FUTMINNA",
+    "type": "University",
+    "state": "Niger"
+  },
+  {
+    "name": "Federal University of Technology, Owerri",
+    "shortName": "FUTO",
+    "type": "University",
+    "state": "Imo"
+  },
+  {
+    "name": "Federal University, Oye-Ekiti",
+    "shortName": "FUOYE",
+    "type": "University",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Federal University, Lokoja",
+    "shortName": "FULOKOJA",
+    "type": "University",
+    "state": "Kogi"
+  },
+  {
+    "name": "Federal University, Dutse",
+    "shortName": "FUD",
+    "type": "University",
+    "state": "Jigawa"
+  },
+  {
+    "name": "Federal University, Lafia",
+    "shortName": "FULAFIA",
+    "type": "University",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Federal University, Kashere",
+    "shortName": "FUKASHERE",
+    "type": "University",
+    "state": "Gombe"
+  },
+  {
+    "name": "Federal University, Gashua",
+    "shortName": "FUGASHUA",
+    "type": "University",
+    "state": "Yobe"
+  },
+  {
+    "name": "Federal University, Birnin Kebbi",
+    "shortName": "FUBK",
+    "type": "University",
+    "state": "Kebbi"
+  },
+  {
+    "name": "Federal University, Gusau",
+    "shortName": "FUGUS",
+    "type": "University",
+    "state": "Zamfara"
+  },
+  {
+    "name": "Federal University, Wukari",
+    "shortName": "FUWUKARI",
+    "type": "University",
+    "state": "Taraba"
+  },
+  {
+    "name": "Federal University, Dutsin-Ma",
+    "shortName": "FUDMA",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "Federal University of Health Sciences, Ila Orangun",
+    "shortName": "FUSHI",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Niger Delta University",
+    "shortName": "NDU",
+    "type": "University",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Delta State University",
+    "shortName": "DELSU",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "Rivers State University",
+    "shortName": "RSU",
+    "type": "University",
+    "state": "Rivers"
+  },
+  {
+    "name": "Olabisi Onabanjo University",
+    "shortName": "OOU",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Ekiti State University",
+    "shortName": "EKSU",
+    "type": "University",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Osun State University",
+    "shortName": "UNIOSUN",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Ondo State University of Medical Sciences",
+    "shortName": "UNIMED",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Kwara State University",
+    "shortName": "KWASU",
+    "type": "University",
+    "state": "Kwara"
+  },
+  {
+    "name": "Kogi State University",
+    "shortName": "KSU",
+    "type": "University",
+    "state": "Kogi"
+  },
+  {
+    "name": "Benue State University",
+    "shortName": "BSU",
+    "type": "University",
+    "state": "Benue"
+  },
+  {
+    "name": "Nasarawa State University",
+    "shortName": "NSUK",
+    "type": "University",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Abia State University",
+    "shortName": "ABSU",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Imo State University",
+    "shortName": "IMSU",
+    "type": "University",
+    "state": "Imo"
+  },
+  {
+    "name": "Enugu State University of Science and Technology",
+    "shortName": "ESUT",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Anambra State University",
+    "shortName": "ANSU",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Ebonyi State University",
+    "shortName": "EBSU",
+    "type": "University",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Cross River University of Technology",
+    "shortName": "CRUTECH",
+    "type": "University",
+    "state": "Cross River"
+  },
+  {
+    "name": "Akwa Ibom State University",
+    "shortName": "AKSU",
+    "type": "University",
+    "state": "Akwa Ibom"
+  },
+  {
+    "name": "Lagos State University of Education",
+    "shortName": "LASUED",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "Lagos State University of Science and Technology",
+    "shortName": "LASUSTECH",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "Yaba College of Technology",
+    "shortName": "YABATECH",
+    "type": "Polytechnic",
+    "state": "Lagos"
+  },
+  {
+    "name": "The Polytechnic, Ibadan",
+    "shortName": "POLY IBADAN",
+    "type": "Polytechnic",
+    "state": "Oyo"
+  },
+  {
+    "name": "Federal Polytechnic, Ede",
+    "shortName": "EDEPOLY",
+    "type": "Polytechnic",
+    "state": "Osun"
+  },
+  {
+    "name": "Auchi Polytechnic",
+    "shortName": "AUCHIPOLY",
+    "type": "Polytechnic",
+    "state": "Edo"
+  },
+  {
+    "name": "Federal Polytechnic, Ilaro",
+    "shortName": "FEDPOLY ILARO",
+    "type": "Polytechnic",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal Polytechnic, Nekede",
+    "shortName": "FPNO",
+    "type": "Polytechnic",
+    "state": "Imo"
+  },
+  {
+    "name": "Federal Polytechnic, Ado-Ekiti",
+    "shortName": "FEDPOLY ADO",
+    "type": "Polytechnic",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Federal Polytechnic, Bida",
+    "shortName": "FEDPOLY BIDA",
+    "type": "Polytechnic",
+    "state": "Niger"
+  },
+  {
+    "name": "Federal Polytechnic, Offa",
+    "shortName": "FEDPOLY OFFA",
+    "type": "Polytechnic",
+    "state": "Kwara"
+  },
+  {
+    "name": "Federal Polytechnic, Oko",
+    "shortName": "FEDPOLY OKO",
+    "type": "Polytechnic",
+    "state": "Anambra"
+  },
+  {
+    "name": "Federal Polytechnic, Nasarawa",
+    "shortName": "FEDPOLY NASARAWA",
+    "type": "Polytechnic",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Federal Polytechnic, Bauchi",
+    "shortName": "FEDPOLY BAUCHI",
+    "type": "Polytechnic",
+    "state": "Bauchi"
+  },
+  {
+    "name": "Federal Polytechnic, Mubi",
+    "shortName": "FEDPOLY MUBI",
+    "type": "Polytechnic",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Federal Polytechnic, Damaturu",
+    "shortName": "FEDPOLY DAMATURU",
+    "type": "Polytechnic",
+    "state": "Yobe"
+  },
+  {
+    "name": "Federal Polytechnic, Kaura Namoda",
+    "shortName": "FEDPOLY KNM",
+    "type": "Polytechnic",
+    "state": "Zamfara"
+  },
+  {
+    "name": "Federal Polytechnic, Kaltungo",
+    "shortName": "FEDPOLY KALTUNGO",
+    "type": "Polytechnic",
+    "state": "Gombe"
+  },
+  {
+    "name": "Kaduna Polytechnic",
+    "shortName": "KADPOLY",
+    "type": "Polytechnic",
+    "state": "Kaduna"
+  },
+  {
+    "name": "Kano State Polytechnic",
+    "shortName": "KANO POLY",
+    "type": "Polytechnic",
+    "state": "Kano"
+  },
+  {
+    "name": "Lagos State Polytechnic",
+    "shortName": "LASPOTECH",
+    "type": "Polytechnic",
+    "state": "Lagos"
+  },
+  {
+    "name": "Rufus Giwa Polytechnic",
+    "shortName": "RUGIPO",
+    "type": "Polytechnic",
+    "state": "Ondo"
+  },
+  {
+    "name": "Osun State Polytechnic",
+    "shortName": "OSPOLY",
+    "type": "Polytechnic",
+    "state": "Osun"
+  },
+  {
+    "name": "Kogi State Polytechnic",
+    "shortName": "KSP",
+    "type": "Polytechnic",
+    "state": "Kogi"
+  },
+  {
+    "name": "Plateau State Polytechnic",
+    "shortName": "PLAPOLY",
+    "type": "Polytechnic",
+    "state": "Plateau"
+  },
+  {
+    "name": "Nasarawa State Polytechnic",
+    "shortName": "NASPOLY",
+    "type": "Polytechnic",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Oil and Gas Polytechnic, Bonny",
+    "shortName": "OGITECH",
+    "type": "Polytechnic",
+    "state": "Rivers"
+  },
+  {
+    "name": "Federal College of Education, Zaria",
+    "shortName": "FCE ZARIA",
+    "type": "College",
+    "state": "Kaduna"
+  },
+  {
+    "name": "Adeyemi College of Education",
+    "shortName": "ACE",
+    "type": "College",
+    "state": "Ondo"
+  },
+  {
+    "name": "College of Education, Ikere-Ekiti",
+    "shortName": "COE IKERE",
+    "type": "College",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Federal College of Education (Technical), Akoka",
+    "shortName": "FCET AKOKA",
+    "type": "College",
+    "state": "Lagos"
+  },
+  {
+    "name": "Federal College of Education, Abeokuta",
+    "shortName": "FCE ABEOKUTA",
+    "type": "College",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal College of Education, Kano",
+    "shortName": "FCE KANO",
+    "type": "College",
+    "state": "Kano"
+  },
+  {
+    "name": "Federal College of Education, Kontagora",
+    "shortName": "FCE KONTAGORA",
+    "type": "College",
+    "state": "Niger"
+  },
+  {
+    "name": "Federal College of Education, Pankshin",
+    "shortName": "FCE PANKSHIN",
+    "type": "College",
+    "state": "Plateau"
+  },
+  {
+    "name": "Federal College of Education, Gombe",
+    "shortName": "FCE GOMBE",
+    "type": "College",
+    "state": "Gombe"
+  },
+  {
+    "name": "Federal College of Education, Okene",
+    "shortName": "FCE OKENE",
+    "type": "College",
+    "state": "Kogi"
+  },
+  {
+    "name": "University of Uyo",
+    "shortName": "U",
+    "type": "University",
+    "state": "Akwa Ibom"
+  },
+  {
+    "name": "Federal University of Agriculture, Makurdi",
+    "shortName": "AM",
+    "type": "University",
+    "state": "Benue"
+  },
+  {
+    "name": "Federal University of Agriculture, Zuru",
+    "shortName": "AZ",
+    "type": "University",
+    "state": "Kebbi"
+  },
+  {
+    "name": "Federal University, Akure",
+    "shortName": "A",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Federal University, Yola",
+    "shortName": "Y",
+    "type": "University",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Federal University, Otuoke",
+    "shortName": "O",
+    "type": "University",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Federal University, Otueke",
+    "shortName": "O",
+    "type": "University",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Federal University, Ikwo",
+    "shortName": "I",
+    "type": "University",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Federal University, Ndifu-Alike",
+    "shortName": "NA",
+    "type": "University",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Federal University of Health Sciences, Azare",
+    "shortName": "HSA",
+    "type": "University",
+    "state": "Bauchi"
+  },
+  {
+    "name": "Federal University of Health Sciences, Otukpo",
+    "shortName": "HSO",
+    "type": "University",
+    "state": "Benue"
+  },
+  {
+    "name": "Federal University of Health Sciences, Katsina",
+    "shortName": "HSK",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "Tai Solarin University of Education",
+    "shortName": "TSE",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Ladoke Akintola University of Technology",
+    "shortName": "LAT",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Adekunle Ajasin University",
+    "shortName": "AA",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Delta State University of Science and Technology",
+    "shortName": "DST",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "Ambrose Alli University",
+    "shortName": "AA",
+    "type": "University",
+    "state": "Edo"
+  },
+  {
+    "name": "Edo State University Uzairue",
+    "shortName": "EU",
+    "type": "University",
+    "state": "Edo"
+  },
+  {
+    "name": "Ignatius Ajuru University of Education",
+    "shortName": "IAE",
+    "type": "University",
+    "state": "Rivers"
+  },
+  {
+    "name": "Chukwuemeka Odumegwu Ojukwu University",
+    "shortName": "COO",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Plateau State University",
+    "shortName": "P",
+    "type": "University",
+    "state": "Plateau"
+  },
+  {
+    "name": "Kano University of Science and Technology",
+    "shortName": "KST",
+    "type": "University",
+    "state": "Kano"
+  },
+  {
+    "name": "Kaduna State University",
+    "shortName": "K",
+    "type": "University",
+    "state": "Kaduna"
+  },
+  {
+    "name": "Sokoto State University",
+    "shortName": "S",
+    "type": "University",
+    "state": "Sokoto"
+  },
+  {
+    "name": "Usmanu Danfodiyo University",
+    "shortName": "UD",
+    "type": "University",
+    "state": "Sokoto"
+  },
+  {
+    "name": "Kebbi State University of Science and Technology",
+    "shortName": "KST",
+    "type": "University",
+    "state": "Kebbi"
+  },
+  {
+    "name": "Jigawa State University",
+    "shortName": "J",
+    "type": "University",
+    "state": "Jigawa"
+  },
+  {
+    "name": "Yobe State University",
+    "shortName": "Y",
+    "type": "University",
+    "state": "Yobe"
+  },
+  {
+    "name": "Gombe State University",
+    "shortName": "G",
+    "type": "University",
+    "state": "Gombe"
+  },
+  {
+    "name": "Adamawa State University",
+    "shortName": "A",
+    "type": "University",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Taraba State University",
+    "shortName": "T",
+    "type": "University",
+    "state": "Taraba"
+  },
+  {
+    "name": "Borno State University",
+    "shortName": "B",
+    "type": "University",
+    "state": "Borno"
+  },
+  {
+    "name": "Katsina State University",
+    "shortName": "K",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "FUDMA",
+    "shortName": "F",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "FUDMA University of Medical Sciences",
+    "shortName": "FMS",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "American University of Nigeria",
+    "shortName": "AN",
+    "type": "University",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Babcock University",
+    "shortName": "B",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Covenant University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Redeemer's University",
+    "shortName": "RS",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Lead City University",
+    "shortName": "LC",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Ajayi Crowther University",
+    "shortName": "AC",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Bowen University",
+    "shortName": "B",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Adeleke University",
+    "shortName": "A",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Oduduwa University",
+    "shortName": "O",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Precious Cornerstone University",
+    "shortName": "PC",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Atiba University",
+    "shortName": "A",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Kola Daisi University",
+    "shortName": "KD",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Dominican University Ibadan",
+    "shortName": "DI",
+    "type": "University",
+    "state": "Oyo"
+  },
+  {
+    "name": "Pan-Atlantic University",
+    "shortName": "PA",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "Lagos Business School",
+    "shortName": "LBS",
+    "type": "Other Tertiary",
+    "state": "Lagos"
+  },
+  {
+    "name": "Nile University of Nigeria",
+    "shortName": "NN",
+    "type": "University",
+    "state": "FCT"
+  },
+  {
+    "name": "Baze University",
+    "shortName": "B",
+    "type": "University",
+    "state": "FCT"
+  },
+  {
+    "name": "Veritas University",
+    "shortName": "V",
+    "type": "University",
+    "state": "FCT"
+  },
+  {
+    "name": "Bingham University",
+    "shortName": "B",
+    "type": "University",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Caleb University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "Chrisland University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Crescent University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Igbinedion University",
+    "shortName": "I",
+    "type": "University",
+    "state": "Edo"
+  },
+  {
+    "name": "Benson Idahosa University",
+    "shortName": "BI",
+    "type": "University",
+    "state": "Edo"
+  },
+  {
+    "name": "Maranatha University",
+    "shortName": "M",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "Mountain Top University",
+    "shortName": "MT",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "McPherson University",
+    "shortName": "M",
+    "type": "University",
+    "state": "Ogun"
+  },
+  {
+    "name": "Joseph Ayo Babalola University",
+    "shortName": "JAB",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Elizade University",
+    "shortName": "E",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Achievers University",
+    "shortName": "A",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Wesley University",
+    "shortName": "W",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Fountain University",
+    "shortName": "F",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Al-Hikmah University",
+    "shortName": "AH",
+    "type": "University",
+    "state": "Kwara"
+  },
+  {
+    "name": "Summit University",
+    "shortName": "S",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Skyline University Nigeria",
+    "shortName": "SN",
+    "type": "University",
+    "state": "Kano"
+  },
+  {
+    "name": "Maryam Abacha American University of Nigeria",
+    "shortName": "MAAN",
+    "type": "University",
+    "state": "Kano"
+  },
+  {
+    "name": "Capital City University",
+    "shortName": "CC",
+    "type": "University",
+    "state": "Kano"
+  },
+  {
+    "name": "Jewel University",
+    "shortName": "J",
+    "type": "University",
+    "state": "Gombe"
+  },
+  {
+    "name": "Northwest University Sokoto",
+    "shortName": "NS",
+    "type": "University",
+    "state": "Sokoto"
+  },
+  {
+    "name": "Sule Lamido University",
+    "shortName": "SL",
+    "type": "University",
+    "state": "Jigawa"
+  },
+  {
+    "name": "Khadija University",
+    "shortName": "K",
+    "type": "University",
+    "state": "Katsina"
+  },
+  {
+    "name": "Mewar University Nigeria",
+    "shortName": "MN",
+    "type": "University",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Edwin Clark University",
+    "shortName": "EC",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "Novena University",
+    "shortName": "N",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "Western Delta University",
+    "shortName": "WD",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "PAMO University of Medical Sciences",
+    "shortName": "PMS",
+    "type": "University",
+    "state": "Rivers"
+  },
+  {
+    "name": "Madonna University",
+    "shortName": "M",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Caritas University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Godfrey Okoye University",
+    "shortName": "GO",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Renaissance University",
+    "shortName": "R",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Coal City University",
+    "shortName": "CC",
+    "type": "University",
+    "state": "Enugu"
+  },
+  {
+    "name": "Gregory University",
+    "shortName": "G",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Michael Okpara University of Agriculture",
+    "shortName": "MOA",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Clifford University",
+    "shortName": "C",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Spiritan University",
+    "shortName": "S",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Nigerian British University",
+    "shortName": "NB",
+    "type": "University",
+    "state": "Abia"
+  },
+  {
+    "name": "Hezekiah University",
+    "shortName": "H",
+    "type": "University",
+    "state": "Imo"
+  },
+  {
+    "name": "Evangel University",
+    "shortName": "E",
+    "type": "University",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Paul University",
+    "shortName": "P",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Tansian University",
+    "shortName": "T",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Madonna University Okija",
+    "shortName": "MO",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Legacy University",
+    "shortName": "L",
+    "type": "University",
+    "state": "Anambra"
+  },
+  {
+    "name": "Micheal and Cecilia Ibru University",
+    "shortName": "MCI",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "Warri Medical University",
+    "shortName": "WM",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "University of Delta State",
+    "shortName": "D",
+    "type": "University",
+    "state": "Delta"
+  },
+  {
+    "name": "University of Ilesa",
+    "shortName": "I",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "University of Fortune",
+    "shortName": "F",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Venite University",
+    "shortName": "V",
+    "type": "University",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Sam Maris University",
+    "shortName": "SM",
+    "type": "University",
+    "state": "Ondo"
+  },
+  {
+    "name": "Westland University",
+    "shortName": "W",
+    "type": "University",
+    "state": "Osun"
+  },
+  {
+    "name": "Trinity University",
+    "shortName": "T",
+    "type": "University",
+    "state": "Lagos"
+  },
+  {
+    "name": "University of Africa Toru-Orua",
+    "shortName": "ATO",
+    "type": "University",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Bayelsa Medical University",
+    "shortName": "BM",
+    "type": "University",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Oil and Gas University of Nigeria",
+    "shortName": "OGN",
+    "type": "University",
+    "state": "Rivers"
+  },
+  {
+    "name": "Abraham Adesanya Polytechnic",
+    "shortName": "AA",
+    "type": "Polytechnic",
+    "state": "Ogun"
+  },
+  {
+    "name": "Abia State Polytechnic",
+    "shortName": "A",
+    "type": "Polytechnic",
+    "state": "Abia"
+  },
+  {
+    "name": "Abubakar Tatari Ali Polytechnic",
+    "shortName": "ATA",
+    "type": "Polytechnic",
+    "state": "Bauchi"
+  },
+  {
+    "name": "Adamawa State Polytechnic",
+    "shortName": "A",
+    "type": "Polytechnic",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Akwa Ibom State Polytechnic",
+    "shortName": "AI",
+    "type": "Polytechnic",
+    "state": "Akwa Ibom"
+  },
+  {
+    "name": "Federal Polytechnic Ado-Ekiti",
+    "shortName": "AE",
+    "type": "Polytechnic",
+    "state": "Ekiti"
+  },
+  {
+    "name": "Federal Polytechnic Bauchi",
+    "shortName": "B",
+    "type": "Polytechnic",
+    "state": "Bauchi"
+  },
+  {
+    "name": "Federal Polytechnic Bida",
+    "shortName": "B",
+    "type": "Polytechnic",
+    "state": "Niger"
+  },
+  {
+    "name": "Federal Polytechnic Damaturu",
+    "shortName": "D",
+    "type": "Polytechnic",
+    "state": "Yobe"
+  },
+  {
+    "name": "Federal Polytechnic Ede",
+    "shortName": "E",
+    "type": "Polytechnic",
+    "state": "Osun"
+  },
+  {
+    "name": "Federal Polytechnic Ekowe",
+    "shortName": "E",
+    "type": "Polytechnic",
+    "state": "Bayelsa"
+  },
+  {
+    "name": "Federal Polytechnic Idah",
+    "shortName": "I",
+    "type": "Polytechnic",
+    "state": "Kogi"
+  },
+  {
+    "name": "Federal Polytechnic Ilaro",
+    "shortName": "I",
+    "type": "Polytechnic",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal Polytechnic Kaura Namoda",
+    "shortName": "KN",
+    "type": "Polytechnic",
+    "state": "Zamfara"
+  },
+  {
+    "name": "Federal Polytechnic Mubi",
+    "shortName": "M",
+    "type": "Polytechnic",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Federal Polytechnic Nekede",
+    "shortName": "N",
+    "type": "Polytechnic",
+    "state": "Imo"
+  },
+  {
+    "name": "Federal Polytechnic Nasarawa",
+    "shortName": "N",
+    "type": "Polytechnic",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Federal Polytechnic Offa",
+    "shortName": "O",
+    "type": "Polytechnic",
+    "state": "Kwara"
+  },
+  {
+    "name": "Federal Polytechnic Oko",
+    "shortName": "O",
+    "type": "Polytechnic",
+    "state": "Anambra"
+  },
+  {
+    "name": "Federal Polytechnic Ukana",
+    "shortName": "U",
+    "type": "Polytechnic",
+    "state": "Akwa Ibom"
+  },
+  {
+    "name": "Federal Polytechnic Uwana",
+    "shortName": "U",
+    "type": "Polytechnic",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Federal Polytechnic Wannune",
+    "shortName": "W",
+    "type": "Polytechnic",
+    "state": "Benue"
+  },
+  {
+    "name": "Federal Polytechnic Kaltungo",
+    "shortName": "K",
+    "type": "Polytechnic",
+    "state": "Gombe"
+  },
+  {
+    "name": "Kwara State Polytechnic",
+    "shortName": "K",
+    "type": "Polytechnic",
+    "state": "Kwara"
+  },
+  {
+    "name": "Moshood Abiola Polytechnic",
+    "shortName": "MA",
+    "type": "Polytechnic",
+    "state": "Ogun"
+  },
+  {
+    "name": "Niger State Polytechnic",
+    "shortName": "N",
+    "type": "Polytechnic",
+    "state": "Niger"
+  },
+  {
+    "name": "Oil and Gas Polytechnic",
+    "shortName": "OG",
+    "type": "Polytechnic",
+    "state": "Delta"
+  },
+  {
+    "name": "The Polytechnic Ibadan",
+    "shortName": "I",
+    "type": "Polytechnic",
+    "state": "Oyo"
+  },
+  {
+    "name": "Delta State Polytechnic Ogwashi-Uku",
+    "shortName": "DOU",
+    "type": "Polytechnic",
+    "state": "Delta"
+  },
+  {
+    "name": "Edo State Polytechnic",
+    "shortName": "E",
+    "type": "Polytechnic",
+    "state": "Edo"
+  },
+  {
+    "name": "Gateway ICT Polytechnic",
+    "shortName": "GI",
+    "type": "Polytechnic",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal Polytechnic of Oil and Gas Bonny",
+    "shortName": "OGB",
+    "type": "Polytechnic",
+    "state": "Rivers"
+  },
+  {
+    "name": "Federal College of Education Zaria",
+    "shortName": "EZ",
+    "type": "College of Education",
+    "state": "Kaduna"
+  },
+  {
+    "name": "Federal College of Education Kano",
+    "shortName": "EK",
+    "type": "College of Education",
+    "state": "Kano"
+  },
+  {
+    "name": "Federal College of Education Abeokuta",
+    "shortName": "EA",
+    "type": "College of Education",
+    "state": "Ogun"
+  },
+  {
+    "name": "Federal College of Education Oyo",
+    "shortName": "EO",
+    "type": "College of Education",
+    "state": "Oyo"
+  },
+  {
+    "name": "Federal College of Education (Technical) Akoka",
+    "shortName": "ETA",
+    "type": "College of Education",
+    "state": "Lagos"
+  },
+  {
+    "name": "Federal College of Education Okene",
+    "shortName": "EO",
+    "type": "College of Education",
+    "state": "Kogi"
+  },
+  {
+    "name": "Federal College of Education Pankshin",
+    "shortName": "EP",
+    "type": "College of Education",
+    "state": "Plateau"
+  },
+  {
+    "name": "Federal College of Education Yola",
+    "shortName": "EY",
+    "type": "College of Education",
+    "state": "Adamawa"
+  },
+  {
+    "name": "Federal College of Education Eha-Amufu",
+    "shortName": "EEA",
+    "type": "College of Education",
+    "state": "Enugu"
+  },
+  {
+    "name": "Federal College of Education (Technical) Gusau",
+    "shortName": "ETG",
+    "type": "College of Education",
+    "state": "Zamfara"
+  },
+  {
+    "name": "Federal College of Education Kontagora",
+    "shortName": "EK",
+    "type": "College of Education",
+    "state": "Niger"
+  },
+  {
+    "name": "Federal College of Education Obudu",
+    "shortName": "EO",
+    "type": "College of Education",
+    "state": "Cross River"
+  },
+  {
+    "name": "Federal College of Education (Technical) Omoku",
+    "shortName": "ETO",
+    "type": "College of Education",
+    "state": "Rivers"
+  },
+  {
+    "name": "Federal College of Education (Technical) Potiskum",
+    "shortName": "ETP",
+    "type": "College of Education",
+    "state": "Yobe"
+  },
+  {
+    "name": "Federal College of Education (Technical) Umunze",
+    "shortName": "ETU",
+    "type": "College of Education",
+    "state": "Anambra"
+  },
+  {
+    "name": "Federal College of Education (Technical) Asaba",
+    "shortName": "ETA",
+    "type": "College of Education",
+    "state": "Delta"
+  },
+  {
+    "name": "Federal College of Education (Technical) Gombe",
+    "shortName": "ETG",
+    "type": "College of Education",
+    "state": "Gombe"
+  },
+  {
+    "name": "Federal College of Education (Technical) Bichi",
+    "shortName": "ETB",
+    "type": "College of Education",
+    "state": "Kano"
+  },
+  {
+    "name": "Alvan Ikoku Federal University of Education",
+    "shortName": "AIE",
+    "type": "College of Education",
+    "state": "Imo"
+  },
+  {
+    "name": "Adeniran Ogunsanya College of Education",
+    "shortName": "AOE",
+    "type": "College of Education",
+    "state": "Lagos"
+  },
+  {
+    "name": "College of Education Ilorin",
+    "shortName": "EI",
+    "type": "College of Education",
+    "state": "Kwara"
+  },
+  {
+    "name": "College of Education Ikere-Ekiti",
+    "shortName": "EIE",
+    "type": "College of Education",
+    "state": "Ekiti"
+  },
+  {
+    "name": "College of Education Ilesa",
+    "shortName": "EI",
+    "type": "College of Education",
+    "state": "Osun"
+  },
+  {
+    "name": "Tai Solarin College of Education",
+    "shortName": "TSE",
+    "type": "College of Education",
+    "state": "Ogun"
+  },
+  {
+    "name": "College of Education Akwanga",
+    "shortName": "EA",
+    "type": "College of Education",
+    "state": "Nasarawa"
+  },
+  {
+    "name": "Kaduna State College of Education Gidan Waya",
+    "shortName": "KEGW",
+    "type": "College of Education",
+    "state": "Kaduna"
+  },
+  {
+    "name": "College of Education Zing",
+    "shortName": "EZ",
+    "type": "College of Education",
+    "state": "Taraba"
+  },
+  {
+    "name": "Kashim Ibrahim College of Education",
+    "shortName": "KIE",
+    "type": "College of Education",
+    "state": "Borno"
+  },
+  {
+    "name": "Sa'adatu Rimi College of Education",
+    "shortName": "SARE",
+    "type": "College of Education",
+    "state": "Kano"
+  },
+  {
+    "name": "Akwa Ibom State College of Education",
+    "shortName": "AIE",
+    "type": "College of Education",
+    "state": "Akwa Ibom"
+  },
+  {
+    "name": "Cross River State College of Education",
+    "shortName": "CRE",
+    "type": "College of Education",
+    "state": "Cross River"
+  },
+  {
+    "name": "Ebonyi State College of Education",
+    "shortName": "EE",
+    "type": "College of Education",
+    "state": "Ebonyi"
+  },
+  {
+    "name": "Enugu State College of Education (Technical)",
+    "shortName": "EET",
+    "type": "College of Education",
+    "state": "Enugu"
+  },
+  {
+    "name": "FCT College of Education Zuba",
+    "shortName": "FEZ",
+    "type": "College of Education",
+    "state": "FCT"
+  },
+  {
+    "name": "College of Education Gindiri",
+    "shortName": "EG",
+    "type": "College of Education",
+    "state": "Plateau"
+  },
+  {
+    "name": "College of Education Hong",
+    "shortName": "EH",
+    "type": "College of Education",
+    "state": "Adamawa"
+  },
+  {
+    "name": "College of Education Warri",
+    "shortName": "EW",
+    "type": "College of Education",
+    "state": "Delta"
+  },
+  {
+    "name": "College of Education Ila-Orangun",
+    "shortName": "EIO",
+    "type": "College of Education",
+    "state": "Osun"
+  },
+  {
+    "name": "College of Education Ikwo",
+    "shortName": "EI",
+    "type": "College of Education",
+    "state": "Ebonyi"
+  }
+]

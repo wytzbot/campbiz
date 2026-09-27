@@ -1,88 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#24104f">
-  <meta name="description" content="Discover campus businesses, services, products and free student tools in one place.">
-  <link rel="manifest" href="manifest.json">
-<link rel="icon" href="assets/icon-192.png" type="image/png">
-  <link rel="stylesheet" href="styles.css">
-  <title>CampBiz</title>
-</head>
-<body>
-<header class="topbar">
-  <a class="brand" href="#home"><span class="logo">CB</span><span>CampBiz</span></a>
-  <button id="menuBtn" class="icon-btn" aria-label="Open menu">☰</button>
-</header>
-
-<aside id="drawer" class="drawer" aria-hidden="true">
-  <div class="drawer-head"><strong>Menu</strong><button id="closeMenu" class="icon-btn">×</button></div>
-  <nav>
-    <a href="#home">Home</a><a href="#search">Search businesses</a><a href="#tools">Student tools</a>
-    <a href="#favorites">Saved businesses</a><a href="#owner">Business owner</a><a href="#about">About</a>
-  </nav>
-</aside>
-<div id="backdrop" class="backdrop hidden"></div>
-
-<main>
-<section id="home" class="page active">
-  <div class="hero">
-    <span class="eyebrow">Your campus, connected</span>
-    <h1>Find useful businesses around your school.</h1>
-    <p>Discover products, services, prices and locations, then contact owners directly.</p>
-    <div class="school-card">
-      <label for="schoolSelect">Your school</label>
-      <input id="schoolSelect" list="schoolList" placeholder="Search by school name or abbreviation">
-      <datalist id="schoolList"></datalist>
-      <button id="continueSchool" class="primary">Continue anonymously</button>
-      <small>No account required for students.</small>
-    </div>
-  </div>
-  <div id="homeContent" class="hidden">
-    <div class="section-head"><div><span class="eyebrow">For you</span><h2>Trending on your campus</h2></div><a href="#search">See all</a></div>
-    <div id="fyp" class="grid"></div>
-    <div class="section-head"><div><span class="eyebrow">Free</span><h2>Student tools</h2></div><a href="#tools">Open tools</a></div>
-    <div id="toolPreview" class="tool-grid"></div>
-  </div>
-</section>
-
-<section id="search" class="page">
-  <div class="page-head"><span class="eyebrow">Discovery</span><h1>Search your campus</h1></div>
-  <div class="searchbar"><input id="searchInput" placeholder="Try: food under ₦3000, printing, laundry..."><button id="searchBtn" class="primary">Search</button></div>
-  <div class="filters"><select id="categoryFilter"><option value="">All categories</option></select><select id="priceFilter"><option value="">Any price</option><option value="low">Under ₦3,000</option><option value="mid">₦3,000–₦10,000</option><option value="high">Above ₦10,000</option></select></div>
-  <div id="results" class="grid"></div>
-</section>
-
-<section id="tools" class="page">
-  <div class="page-head"><span class="eyebrow">Free student tools</span><h1>Useful stuff, no subscription.</h1><p>Small tools that solve everyday campus problems. Everything here runs in your browser.</p></div>
-  <div id="toolsGrid" class="tool-grid"></div>
-  <div id="toolPanel" class="tool-panel hidden"></div>
-</section>
-
-<section id="favorites" class="page">
-  <div class="page-head"><span class="eyebrow">Saved</span><h1>Your saved businesses</h1><p>Saved locally on this device.</p></div>
-  <div id="favoritesGrid" class="grid"></div>
-</section>
-
-<section id="owner" class="page">
-  <div class="page-head"><span class="eyebrow">For business owners</span><h1>Put your campus business on the map.</h1><p>Owners use Google sign-in, connect their own Google Drive for media, get a store page and receive direct WhatsApp leads.</p></div>
-  <div class="owner-card">
-    <h2>₦1,200/month</h2><p><strong>60 days free</strong> for each approved business.</p>
-    <ul><li>Campus visibility and search</li><li>Store link</li><li>Product catalogue</li><li>Google Drive media</li><li>Reviews and analytics</li><li>Direct WhatsApp contact</li></ul>
-    <button class="primary" id="ownerLogin">Continue with Google</button>
-    <p class="muted">Payment processing and Google Drive OAuth are handled by the secure backend configuration described in README.md.</p>
-  </div>
-</section>
-
-<section id="about" class="page">
-  <div class="page-head"><span class="eyebrow">About</span><h1>A campus discovery layer, not a payment middleman.</h1>
-  <p>CampBiz helps students discover campus businesses and contact owners directly. We do not hold customer payments or take responsibility for fulfillment.</p></div>
-  <div class="notice"><strong>Privacy-first student access:</strong> students can browse anonymously after choosing their school. Student verification is intentionally not included in v1.</div>
-</section>
-</main>
-
-<div id="toast" class="toast" role="status"></div>
-<script type="module" src="app.js"></script>
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#24104f"><meta name="description" content="CampBiz helps students discover businesses around Nigerian schools."><link rel="manifest" href="manifest.json"><link rel="icon" href="assets/icon-192.png" type="image/png"><link rel="stylesheet" href="styles.css"><title>CampBiz — Discover businesses around your school</title></head><body>
+<div id="welcomeScreen" class="first-screen"><div class="orb orb-a"></div><div class="orb orb-b"></div><div class="floating f1">🍔</div><div class="floating f2">📱</div><div class="floating f3">✂️</div><div class="floating f4">🧺</div><div class="welcome-copy"><span class="eyebrow">Your campus, connected</span><h1>Campus life, made easier with CampBiz.</h1><p>Discover trusted campus businesses, find food and everyday services, save your favorites, and use free student tools—all in one place.</p><div class="welcome-benefits"><span>📍 Find services near your school</span><span>💸 Compare options and prices</span><span>🎓 Free tools for student life</span></div><button id="googleSignIn" class="google-btn"><span class="google-g">G</span> Sign up / Continue with Google</button><button id="exploreBtn" class="primary hero-btn">Continue without signing up <span>→</span></button><small>Google is optional. Browse without an account anytime.</small><p id="authStatus" class="auth-status" role="status"></p></div></div>
+<div id="schoolPicker" class="first-screen school-screen hidden"><div class="school-panel"><button id="schoolBack" class="back-btn">← Back</button><span class="eyebrow">Step 1 of 1</span><h1>Pick your school</h1><p>Choose one school to personalize your CampBiz feed. You can change it later from the menu.</p><label for="schoolSelect">School</label><input id="schoolSelect" list="schoolList" placeholder="Search school name or abbreviation" autocomplete="off"><datalist id="schoolList"></datalist><button id="continueSchool" class="primary" disabled>Continue</button><small>Only one school is active at a time.</small></div></div>
+<header id="topbar" class="topbar hidden"><a class="brand" href="#home"><span class="logo">CB</span><span>CampBiz</span></a><div class="top-actions"><a class="free-tools" href="#tools">FREE TOOLS</a><button id="menuBtn" class="icon-btn" aria-label="Open menu">☰</button></div></header>
+<aside id="drawer" class="drawer" aria-hidden="true"><div class="drawer-head"><strong>CampBiz menu</strong><button id="closeMenu" class="icon-btn">×</button></div><nav><a href="#home">FYP</a><a href="#search">Search businesses</a><button id="adMenu" class="menu-link">Advertise your business <span>₦1k / 1,200</span></button><a href="#tools">FREE TOOLS</a><a href="#favorites">Saved businesses</a><a href="#owner">Business owner</a><a href="#about">About CampBiz</a></nav><div class="category-menu"><strong>Categories</strong><div>${["Food","Fashion","Beauty","Laundry","Academic Services","Tech","Electronics","Phones","Printing","Barbing","Hair","Health","Pharmacy","Fitness","Transport","Logistics","Photography","Events","Accommodation","Tutoring","Repairs","Supermarket","Groceries","Catering","Pastries","Books","Stationery","Thrift","Accessories","Sports","Music","Creative Services","Freelance","Other"].map(c=>`<a href="#search" data-cat="${c}">${c}</a>`).join("")}</div></div></aside><div id="backdrop" class="backdrop hidden"></div>
+<main id="appLayout" class="hidden"><section id="home" class="page active"><div class="fyp-head"><div><span class="eyebrow">For you · <span id="campusName"></span></span><h1>What’s happening around campus?</h1></div><span class="school-switch">School selected</span></div><div class="quick-search"><input id="fypSearch" placeholder="Search businesses, services, food..."><button onclick="location.hash='search'">Search</button></div><div id="fyp"></div><div class="section-head"><div><span class="eyebrow">Free</span><h2>Useful student tools</h2></div><a href="#tools">See all</a></div><div id="toolPreview" class="tool-grid"></div></section>
+<section id="businessView" class="page"><div id="businessViewContent"></div></section>
+<section id="search" class="page"><div class="page-head"><span class="eyebrow">Discovery</span><h1>Search your campus</h1></div><div class="searchbar"><input id="searchInput" placeholder="Try food, printing, laundry..."><button id="searchBtn" class="primary">Search</button></div><div class="filters"><select id="categoryFilter"><option value="">All categories</option></select><select id="priceFilter"><option value="">Any price</option><option value="low">Under ₦3,000</option><option value="mid">₦3,000–₦10,000</option><option value="high">Above ₦10,000</option></select></div><div id="results" class="grid"></div></section>
+<section id="tools" class="page"><div class="page-head"><span class="eyebrow">Free student tools</span><h1>Useful stuff, no subscription.</h1><p>Small tools for everyday campus life. They run in your browser.</p></div><div id="toolsGrid" class="tool-grid"></div><div id="toolPanel" class="tool-panel hidden"></div></section>
+<section id="favorites" class="page"><div class="page-head"><span class="eyebrow">Saved</span><h1>Your saved businesses</h1><p>Saved locally on this device.</p></div><div id="favoritesGrid" class="grid"></div></section>
+<section id="owner" class="page"><div class="page-head"><span class="eyebrow">For business owners</span><h1>Put your campus business on the map.</h1><p>Get discovered by students around your selected school.</p></div><div class="owner-card"><h2>List your business</h2>
+<p>Reach students around your selected school. Sign in with Google to manage your business listing.</p>
+<div class="subscription-price"><span class="eyebrow">Business owner plan</span><h3>₦11,500 <small>/ year</small></h3><p>Recurring annual subscription. Your plan renews every year until cancelled. You can cancel future renewals through the billing provider.</p></div>
+<button class="primary" id="ownerLogin">Continue with Google</button>
+<button class="primary hidden" id="subscribeAnnual">Subscribe for ₦11,500/year</button>
+<p id="subscriptionStatus" class="muted" role="status" aria-live="polite">Google sign-in is required before subscribing.</p>
+</div></section>
+<section id="about" class="page"><div class="page-head"><span class="eyebrow">About</span><h1>Campus discovery, made simple.</h1><p>CampBiz helps students discover businesses, services and tools around Nigerian schools.</p></div><div class="notice">Students can browse anonymously after selecting one school. Business payments and customer payments are separate from this discovery layer.</div></section></main>
+<div id="modal" class="modal"></div><div id="toast" class="toast" role="status"></div><script type="module" src="app.js"></script></body></html>

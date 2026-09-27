@@ -40,7 +40,7 @@ The frontend is intentionally static-first. Production backend endpoints should 
 `POST /api/flutterwave/webhook`
 - verify webhook authenticity
 - verify transaction server-side
-- update subscription status
+- verify transaction amount/currency, reference and status directly with Flutterwave\n- map verified customer/metadata to authenticated owner and persist plan renewal dates\n- handle duplicate events idempotently\n- update subscription status
 - never trust a client-side "paid=true"
 
 ## Store

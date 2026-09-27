@@ -25,11 +25,16 @@ module.exports=async function handler(req,res){
     const app=getAdminApp();
     const decoded=await admin.auth(app).verifyIdToken(authorization.slice(7));
     if(!decoded.uid)return reply(res,401,{ok:false,error:"Invalid sign-in token."});
+    if((decoded.email||"").toLowerCase()==="ilemobayotolulope11092003@gmail.com") return reply(res,200,{ok:true,free:true,message:"Lifetime free access is enabled for this owner account."});
     const secret=process.env.FLW_SECRET_KEY;
     const apiBase=(process.env.FLW_V4_API_BASE||"https://api.flutterwave.com").replace(/\/+$/,"");
     if(!secret)return reply(res,503,{ok:false,error:"Flutterwave v4 credentials are not configured."});
     if(!process.env.APP_URL)return reply(res,503,{ok:false,error:"APP_URL is not configured."});
 
+    const requestedPlan=req.body?.plan;
+    if(!["monthly","annual"].includes(requestedPlan)) return reply(res,400,{ok:false,error:"Choose a valid subscription plan."});
+    const amount=requestedPlan==="monthly"?1000:11500;
+    const interval=requestedPlan==="monthly"?"monthly":"yearly";
     // V4 recurring charges require a v4 customer and a securely stored/tokenized payment method.
     // These IDs must be written by a trusted v4 payment-method setup flow, never supplied by the browser.
     const db=admin.firestore(app);
@@ -37,15 +42,15 @@ module.exports=async function handler(req,res){
     const billing=ownerSnap.exists?ownerSnap.data():null;
     if(!billing?.customerId||!billing?.paymentMethodId){
       return reply(res,409,{ok:false,code:"PAYMENT_METHOD_SETUP_REQUIRED",
-        error:"Complete the secure Flutterwave v4 card setup before starting the annual subscription."});
+        error:"Complete the secure Flutterwave v4 card setup before starting the subscription."});
     }
     const reference=("CBZ"+decoded.uid.replace(/[^a-zA-Z0-9]/g,"").slice(0,18)+Date.now().toString(36)).slice(0,42);
     const traceId=crypto.randomUUID();
     const idempotencyKey=crypto.randomUUID();
     const paymentRef=db.collection("subscriptionPayments").doc(reference);
     await paymentRef.create({
-      uid:decoded.uid, reference, amount:11500, currency:"NGN",
-      plan:"annual", status:"initiating", createdAt:admin.firestore.FieldValue.serverTimestamp(),
+      uid:decoded.uid, reference, amount, currency:"NGN",
+      plan:requestedPlan, status:"initiating", createdAt:admin.firestore.FieldValue.serverTimestamp(),
       provider:"flutterwave_v4"
     });
     const response=await fetch(`${apiBase}/charges`,{
@@ -57,13 +62,13 @@ module.exports=async function handler(req,res){
         "X-Idempotency-Key":idempotencyKey
       },
       body:JSON.stringify({
-        amount:11500,
+        amount,
         currency:"NGN",
         reference,
         customer_id:billing.customerId,
         payment_method_id:billing.paymentMethodId,
           redirect_url:new URL("/?subscription=return",process.env.APP_URL).toString(),
-        meta:{firebase_uid:decoded.uid,plan:"annual",billing_interval:"yearly"}
+        meta:{firebase_uid:decoded.uid,plan:requestedPlan,billing_interval:interval}
       })
     });
     const result=await response.json().catch(()=>({}));

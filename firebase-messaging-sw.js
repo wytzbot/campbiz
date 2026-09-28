@@ -30,8 +30,11 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
   const target = event.notification?.data?.url || '/#home';
   event.waitUntil(clients.matchAll({type:'window', includeUncontrolled:true}).then(list => {
-    const same = list.find(c => c.url.includes('/campbiz') || c.url.includes(new URL(target, self.location.origin).origin));
-    if (same) { same.focus(); return same.navigate(target); }
-    return clients.openWindow(target);
+    const targetUrl = new URL(target, self.location.origin).href;
+    const same = list.find(c => new URL(c.url).origin === self.location.origin);
+    if (same) {
+      return same.focus().then(c => (c || same).navigate(targetUrl)).catch(() => clients.openWindow(targetUrl));
+    }
+    return clients.openWindow(targetUrl);
   }));
 });

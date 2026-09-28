@@ -18,8 +18,6 @@ FCM flow:
 Never put Firebase Admin credentials, Google OAuth client secrets, or Paystack secret keys in the frontend.
 
 ## Paystack billing
-`POST /api/subscription/authorize` accepts an authenticated owner's `reference` and either:
-- `{ "type":"pin", "nonce":"...", "encrypted_pin":"..." }` when the stored charge's `next_action.type` is `requires_pin`.
-- `{ "type":"otp", "code":"123456" }` when the stored charge's `next_action.type` is `requires_otp`.
+Checkout, trial card verification, activation and status are served by `/api/subscription/{checkout,verify,trial-enroll,trial-verify,activate-trial,status}` and `/api/paystack-webhook` (see `api-contract.md`).
 
 Paystack handles the recurring plan after the initial successful checkout. The application grants Pro access only after server-side transaction verification or a trusted Paystack webhook.

@@ -12,7 +12,6 @@ function readRawBody(req){return new Promise((resolve,reject)=>{if(req.rawBody)r
 function validSignature(raw,signature,secret){if(!signature||!secret)return false;const expected=crypto.createHmac('sha512',secret).update(raw).digest('hex');const a=Buffer.from(expected,'utf8'),b=Buffer.from(String(signature),'utf8');return a.length===b.length&&crypto.timingSafeEqual(a,b)}
 module.exports=async function handler(req,res){
   if(req.method!=='POST')return res.status(405).json({ok:false});
-  let createdEventRef=null;
   try{
     const secret=process.env.PAYSTACK_SECRET_KEY;
     const raw=await readRawBody(req);
@@ -23,7 +22,7 @@ module.exports=async function handler(req,res){
     const identity=`${event.event||'unknown'}:${data.reference||data.subscription?.subscription_code||data.invoice_code||data.id||''}`;const eventKey=crypto.createHash('sha256').update(identity).digest('hex');
     const eventRef=db.collection('paystackEvents').doc(eventKey);
     const existing=await eventRef.get();if(existing.exists)return res.status(200).json({ok:true,duplicate:true});
-    await eventRef.create({event:event.event||null,reference:data.reference||null,receivedAt:admin.firestore.FieldValue.serverTimestamp()});createdEventRef=eventRef;
+    await eventRef.create({event:event.event||null,reference:data.reference||null,receivedAt:admin.firestore.FieldValue.serverTimestamp()});
 
     const metadata=data.metadata&&typeof data.metadata==='object'?data.metadata:{};
     let uid=metadata.firebase_uid||null;
@@ -50,17 +49,11 @@ module.exports=async function handler(req,res){
       await customerRef.set(updates,{merge:true});
     }else if(event.event==='charge.success'){
       if(metadata.flow==='trial_tokenization'){
-        if(reference)await db.collection('subscriptionPayments').doc(reference).set({status:'tokenization_charged',providerEvent:event.event,providerTransactionId:data.id||null,authorization:data.authorization||null,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
+        if(reference)await db.collection('subscriptionPayments').doc(reference).set({status:'tokenization_verified',providerEvent:event.event,providerTransactionId:data.id||null,authorization:data.authorization||null,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       }else{
         updates.subscriptionStatus='active';
-        let endTs=null;
-        if(nextDate&&!Number.isNaN(nextDate.getTime()))endTs=admin.firestore.Timestamp.fromDate(nextDate);
-        else{
-          const code=data.subscription_code||current.paystackSubscriptionCode;
-          if(code&&secret){try{const sr=await fetch(`https://api.paystack.co/subscription/${encodeURIComponent(code)}`,{headers:{Authorization:`Bearer ${secret}`}});const sd=await sr.json().catch(()=>({}));const np=sd?.data?.next_payment_date;if(sr.ok&&np){const nd=new Date(np);if(!Number.isNaN(nd.getTime()))endTs=admin.firestore.Timestamp.fromDate(nd)}}catch(err){console.error('Subscription lookup failed',err)}}
-          if(!endTs&&current.subscriptionEndsAt)endTs=current.subscriptionEndsAt;
-        }
-        if(endTs)updates.subscriptionEndsAt=endTs;
+        if(nextDate&&!Number.isNaN(nextDate.getTime()))updates.subscriptionEndsAt=admin.firestore.Timestamp.fromDate(nextDate);
+        else if(data.subscription_code&&current.subscriptionEndsAt)updates.subscriptionEndsAt=current.subscriptionEndsAt;
         await customerRef.set(updates,{merge:true});
         if(reference)await db.collection('subscriptionPayments').doc(reference).set({status:'verified',providerEvent:event.event,providerTransactionId:data.id||null,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});
       }
@@ -72,7 +65,7 @@ module.exports=async function handler(req,res){
       await customerRef.set({...updates,subscriptionStatus:'cancelled',subscriptionEndsAt:nextDate&&!Number.isNaN(nextDate.getTime())?admin.firestore.Timestamp.fromDate(nextDate):current.subscriptionEndsAt||null},{merge:true});
     }
     return res.status(200).json({ok:true});
-  }catch(e){console.error('Paystack webhook error',e);if(createdEventRef)await createdEventRef.delete().catch(()=>{});return res.status(500).json({ok:false});}
+  }catch(e){console.error('Paystack webhook error',e);return res.status(500).json({ok:false});}
 };
 
 module.exports.config={api:{bodyParser:false}};

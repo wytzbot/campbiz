@@ -188,9 +188,10 @@ The institution lists were cross-checked against current NUC university-system i
 ## Audit findings / launch blockers
 - The UI's annual billing button now reports the provider's charge state and never claims a subscription is active from initiation.
 - Charge attempts are recorded in Firestore `subscriptionPayments` with server timestamps and provider charge IDs.
-- Listings, ratings and comments are served from Firestore/Drive via `/api/storage/upload`; favorites and owner drafts remain device-local (localStorage).
+- Existing marketplace listings are demo/static client data, ratings/favorites are device-local, and the business owner screen is not a complete listing submission CRUD workflow. Do not launch or represent demo businesses as verified live listings.
 - Run end-to-end sandbox tests for auth required/guest, missing payment method, charge success/failure/pending, duplicate webhook, invalid webhook signature, refund/chargeback, renewal, cancellation, expired card, and access revocation.
 
+The backend now includes `POST /api/subscription/authorize` for charge challenges. It supports the v4 `requires_pin` and `requires_otp` action types, verifies the Firebase owner and stored charge challenge, then sends the documented `PUT /charges/{id}` authorization payload. PIN values must arrive encrypted with a nonce; raw PINs are rejected. The initial checkout records the provider's `next_action` and no longer marks the first charge as recurring, so an issuer-required authorization can be handled. This does not complete the missing card-enrollment UI/encryption integration or verified webhook entitlement handler; do not deploy as a complete live subscription flow until those are implemented and tested.
 
 ## Published listing storage
 Published business listings are stored as metadata/reference documents in the Firestore `publishedListings` collection. Images are not stored in Firestore. The browser resizes/crops featured images to 1280x720 and product images to 1200x900, then iteratively JPEG-compresses each image to 450 KB or less before upload. The Drive upload endpoint rejects image payloads over 550 KB as a second safety check. Firestore stores only the Drive image IDs/URLs and listing metadata.

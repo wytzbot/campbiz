@@ -1,16 +1,7 @@
 {
   "headers": [
     {
-      "source": "/",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/(index.html|app.js|styles.css|sw.js|firebase-messaging-sw.js|firebase-config.js|fcm-client.js|manifest.json)",
+      "source": "/(index.html|app.js|sw.js|firebase-messaging-sw.js|manifest.json)",
       "headers": [
         {
           "key": "Cache-Control",

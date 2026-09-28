@@ -22,7 +22,7 @@ export async function enableCampusNotifications({ tokenEndpoint = "/api/fcm/toke
   ]);
 
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js", { scope: "./firebase-cloud-messaging-push-scope" });
+  const registration = await navigator.serviceWorker.register("./firebase-messaging-sw.js", { scope: "./" });
   const messaging = getMessaging(app);
   const token = await getToken(messaging, { vapidKey: firebaseVapidKey, serviceWorkerRegistration: registration });
   if (!token) throw new Error("FCM did not return a registration token.");

@@ -79,3 +79,24 @@ main{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .upgrade-plan span{display:grid}
 .upgrade-plan small{color:#625c70}
 .upgrade-features{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:8px;font-size:.95rem}
+
+/* School picker + account menu mobile fixes */
+.school-panel{overflow:visible}
+.school-combobox{width:100%}
+.school-panel input#schoolSelect{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box;overflow:hidden;text-overflow:clip;white-space:nowrap}
+.school-dropdown{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.school-option{white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.35}
+.school-option strong{white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+.school-option small{white-space:normal;overflow-wrap:anywhere}
+.drawer-account{margin-top:18px;padding-top:16px;border-top:1px solid #eee7f5}
+.drawer-account .signout{color:#b42318!important;background:#fff7f6!important;border:1px solid #f3c9c4!important}
+.drawer-account .signout:hover{background:#fff0ee!important}
+@media(max-width:600px){
+  .school-panel{width:100%;padding:20px}
+  .school-panel h1{font-size:clamp(2rem,10vw,3rem);overflow-wrap:anywhere}
+  .school-panel input#schoolSelect{font-size:16px}
+  .school-dropdown{max-height:min(52vh,360px)}
+  .school-option{padding:13px 14px}
+  .fyp-head .eyebrow{max-width:100%;overflow-wrap:anywhere}
+  #campusName{overflow-wrap:anywhere;word-break:break-word}
+}

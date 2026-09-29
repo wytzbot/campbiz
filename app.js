@@ -67,7 +67,50 @@ async function verifySubscriptionReturn(user){const params=new URLSearchParams(l
 async function enrollTrialBilling(){const plan=document.querySelector('input[name="ownerPlan"]:checked')?.value||'monthly';const user=auth.currentUser;if(!user){toast('Sign in with Google first.');return}try{const token=await user.getIdToken();const r=await fetch('/api/subscription/trial-enroll',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({plan})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Unable to set up billing.');if(d.authorizationUrl)location.href=d.authorizationUrl;else toast(d.message||'Billing setup completed.')}catch(e){toast(e.message||'Unable to set up billing.')}}
 async function activateTrialBilling(){const user=auth.currentUser;if(!user)return;try{const token=await user.getIdToken();const r=await fetch('/api/subscription/activate-trial',{method:'POST',headers:{Authorization:`Bearer ${token}`}});const d=await r.json().catch(()=>({}));toast(d.message||d.error||'Billing update complete.');updateOwnerAccess(user)}catch(e){toast('Unable to start billing automatically.')}}
 async function startSubscription(){const plan=document.querySelector('input[name="ownerPlan"]:checked')?.value||'monthly';const user=auth.currentUser;if(!user){toast('Sign in with Google first.');return}try{const token=await user.getIdToken();const r=await fetch('/api/subscription/checkout',{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({plan})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Unable to start Paystack checkout.');if(d.authorizationUrl)location.href=d.authorizationUrl;else toast(d.message||'Paystack checkout ready.')}catch(e){toast(e.message||'Unable to start subscription.')}}
-function setup(){populateCategories();$("#searchBtn")?.addEventListener('click',renderResults);$("#searchInput")?.addEventListener('keydown',e=>{if(e.key==='Enter')renderResults()});$("#categoryFilter")?.addEventListener('change',renderResults);$("#priceFilter")?.addEventListener('change',renderResults);$("#fypSearch")?.addEventListener('keydown',e=>{if(e.key==='Enter'){location.hash='search';renderResults()}});const schoolSwitch=document.querySelector('.school-switch');schoolSwitch?.addEventListener('click',goSchoolPicker);showFirstVisit();}
+function bindGlobalUI(){
+  // Bind navigation/auth controls before any rendering or remote requests.
+  // This prevents one render-time error from leaving the whole app with dead buttons.
+  const bind=(selector,event,handler)=>{
+    const el=$(selector);
+    if(!el)return;
+    el.addEventListener(event,async e=>{
+      try{await handler(e)}catch(err){console.error(`CampBiz UI action failed: ${selector}`,err);toast(err?.message||"That action could not be completed. Please try again.")}
+    });
+  };
+  bind("#googleSignIn","click",()=>startGoogleAuth("welcome"));
+  bind("#exploreBtn","click",()=>goSchoolPicker(location.hash||""));
+  bind("#skipToolsBtn","click",()=>{state.welcomeSeen=true;save();location.hash="tools";route()});
+  bind("#schoolBack","click",()=>{
+    if(state.school){$("#schoolPicker")?.classList.add("hidden");showFirstVisit();const target=pendingRoute||"#home";pendingRoute="";location.hash=target.replace(/^#/ ,"")||"home";route()}
+    else{$("#schoolPicker")?.classList.add("hidden");$("#welcomeScreen")?.classList.remove("hidden");location.hash=""}
+  });
+  bind("#goDashboardBtn","click",()=>{if(auth.currentUser){location.hash="owner";route()}});
+  bind("#ownerLogin","click",()=>startGoogleAuth("owner"));
+  bind("#ownerGoDashboard","click",()=>{location.hash="owner";route()});
+  bind("#menuBtn","click",()=>{$("#drawer").classList.add("open");$("#drawer").setAttribute("aria-hidden","false");$("#backdrop").classList.remove("hidden")});
+  bind("#closeMenu","click",closeDrawer);
+  bind("#backdrop","click",closeDrawer);
+  bind("#signOutBtn","click",async()=>{
+    try{if(auth.currentUser)await signOut(auth)}catch(error){console.error("Sign out error",error)}
+    state.user=null;try{localStorage.removeItem("cbc_user")}catch{}save();
+    $("#ownerLogin")?.classList.remove("hidden");$("#ownerGoDashboard")?.classList.add("hidden");$("#goDashboardBtn")?.classList.add("hidden");
+    $("#authStatus").textContent="";$("#subscriptionStatus").textContent="Google sign-in is required before subscribing.";
+    updateAccountUI();closeDrawer();location.hash="home";route();toast("Signed out.");
+  });
+  bind("#subscribeAnnual","click",startSubscription);
+  bind("#adMenu","click",openAdComingSoon);
+  bind("#quickSearchBtn","click",()=>{
+    const q=$("#fypSearch")?.value||"";if($("#searchInput"))$("#searchInput").value=q;location.hash="search";route();renderResults();
+  });
+  bind("#searchBtn","click",renderResults);
+  bind("#searchInput","keydown",e=>{if(e.key==="Enter")renderResults()});
+  bind("#categoryFilter","change",renderResults);
+  bind("#priceFilter","change",renderResults);
+  bind("#fypSearch","keydown",e=>{if(e.key==="Enter"){location.hash="search";route();renderResults()}});
+  document.querySelectorAll("#drawer nav a").forEach(a=>a.addEventListener("click",closeDrawer));
+  document.querySelector(".school-switch")?.addEventListener("click",()=>goSchoolPicker());
+}
+function setup(){populateCategories();showFirstVisit();}
 async function openBusiness(id){if(!publishedListingsLoaded)await loadPublishedListings();const b=getBusiness(id);if(!b){toast("That business is no longer available for this school.");location.hash="home";return;}const related=selectedBusinesses().filter(x=>x.id!==id&&x.cat===b.cat);const other=selectedBusinesses().filter(x=>x.id!==id&&x.cat!==b.cat);const rel=[...related,...other].slice(0,6);const trusted=b.trustedStore===true;const ratingText=b.ratingCount?`⭐ ${b.ratingAvg.toFixed(1)} · ${b.ratingCount} client ratings`:`No store ratings yet`;const share=`${location.origin}${location.pathname}#store/${encodeURIComponent(b.ownerUid)}`;$("#businessViewContent").innerHTML=`<div class="detail-head"><button class="back-btn" id="businessBack">← Back</button><span class="eyebrow">Gig / product</span></div><div class="detail-hero"><div class="detail-img">${businessImage(b,true)}</div><div><span class="eyebrow">${esc(b.cat)}</span><h1>${esc(b.name)} ${trusted?`<span class="trusted-badge">✓ Trusted store</span>`:""}</h1><p>${esc(b.about)}</p><p class="meta">📍 ${esc(b.loc)} · 🚚 ${esc(b.delivery)}</p><div class="detail-actions"><a class="primary whatsapp" href="${waUrl(b)}" target="_blank" rel="noopener">Contact me on WhatsApp</a>${b.email?`<a class="email-btn" href="mailto:${esc(b.email)}">Email</a>`:""}<button data-fav="${esc(b.id)}">${state.favorites.includes(b.id)?"♥ Saved":"♡ Save"}</button><button type="button" class="secondary-btn" id="openStoreBtn" data-action="view-store">View store</button></div><div class="store-rating-summary"><strong>${ratingText}</strong>${trusted?`<span class="trusted-note">Trusted store</span>`:""}<button type="button" class="link-btn" id="rateStoreBtn" data-action="rate-store">Rate this store</button></div></div></div><div class="detail-section"><h2>Business information</h2><div class="info-grid"><div><strong>Category</strong><span>${esc(b.cat)}</span></div><div><strong>Starting price</strong><span>₦${Number(b.price).toLocaleString()}</span></div><div><strong>Location</strong><span>${esc(b.loc)}</span></div><div><strong>Delivery</strong><span>${esc(b.delivery)}</span></div>${b.priceRange?`<div><strong>Price range</strong><span>${esc(b.priceRange)}</span></div>`:""}${b.hours?`<div><strong>Opening hours</strong><span>${esc(b.hours)}</span></div>`:""}${b.website?`<div><strong>Website</strong><span><a href="${esc(b.website)}" target="_blank" rel="noopener">Visit website</a></span></div>`:""}</div></div>${productCarousel(b)}${b.description?`<div class="detail-section"><h2>About this business</h2><p>${esc(b.description)}</p></div>`:""}<div class="detail-section comments-section" id="commentsSection"><div class="section-head"><div><span class="eyebrow">Community</span><h2>COMMENTS - <span id="commentCount">0</span></h2></div><button type="button" class="link-btn" id="toggleComments" data-action="toggle-comments">Show comments</button></div><div id="commentPanel" class="comment-panel hidden"><div id="commentList" class="comment-list"><p class="muted">Loading comments…</p></div><div class="comment-form"><textarea id="commentText" maxlength="500" placeholder="Share your experience with this gig or product…"></textarea><button type="button" class="primary" id="sendComment" data-action="send-comment">Send comment</button></div></div><p class="visibility-note">Comments help students make informed choices. Store owners cannot delete client comments.</p></div><div class="detail-section"><h2>Related businesses</h2><div class="grid">${rel.map(card).join("")||"<p>No related businesses yet.</p>"}</div></div>`;$("#businessBack").onclick=()=>{location.hash='home'};wireBusinessActions();loadComments(b.id);setupCommentToggle();const focusComments=new URLSearchParams(location.search).get('focus')==='comments';const desiredHash=`#businessView/${encodeURIComponent(id)}`;if(location.hash!==desiredHash)location.hash=desiredHash;if(focusComments)setTimeout(()=>{const panel=$("#commentPanel"),toggle=$("#toggleComments"),section=$("#commentsSection");panel?.classList.remove('hidden');if(toggle)toggle.textContent='Hide comments';section?.scrollIntoView({behavior:'smooth',block:'start'});},120)}
 function storeFor(ownerUid){return selectedBusinesses().find(x=>x.ownerUid===ownerUid)||null}
 function storeCard(b){return `<article class="store-card" data-store="${esc(b.ownerUid)}"><div class="store-card-img">${businessImage(b,true)}</div><div class="store-card-body"><strong>${esc(b.name)}</strong>${b.trustedStore?`<span class="trusted-badge">✓ Trusted store</span>`:""}<span>⭐ ${b.ratingCount?b.ratingAvg.toFixed(1):"New"} · ${b.ratingCount||0} ratings</span></div></article>`}
@@ -131,25 +174,9 @@ async function startGoogleAuth(source="welcome"){
  if(btn)btn.disabled=true;if(status)status.textContent="Connecting securely to Google…";
  try{const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);if(mobile){sessionStorage.setItem("campbiz_auth_target",source);await signInWithRedirect(auth,googleProvider);return}const result=await signInWithPopup(auth,googleProvider);state.user=result.user;try{localStorage.setItem("cbc_user",JSON.stringify({uid:result.user.uid,name:result.user.displayName||"",email:result.user.email||"",photoURL:result.user.photoURL||""}))}catch{}updateAccountUI();if(status)status.textContent="Google connected.";if(source==="owner"){location.hash="owner";route();}}
  catch(error){console.error("Google sign-in error",error);const code=error?.code||"";if(code==="auth/popup-blocked"||code==="auth/operation-not-supported-in-this-environment"){try{await signInWithRedirect(auth,googleProvider);return}catch(redirectError){console.error(redirectError)}}const msg=code==="auth/unauthorized-domain"?"This website domain is not authorized in Firebase Authentication. Add it in Firebase Console → Authentication → Settings → Authorized domains.":code==="auth/popup-closed-by-user"?"Google sign-in was cancelled. Please try again.":"Google sign-in couldn't be completed. Please try again.";if(status)status.textContent=msg;toast(msg)}finally{if(btn)btn.disabled=false}}
-$("#goDashboardBtn").onclick=()=>{if(auth.currentUser){location.hash="owner";route()}};$("#ownerLogin").onclick=()=>startGoogleAuth("owner");$("#ownerGoDashboard").onclick=()=>{location.hash="owner";route()};
-$("#menuBtn").onclick=()=>{$("#drawer").classList.add("open");$("#drawer").setAttribute("aria-hidden","false");$("#backdrop").classList.remove("hidden")};$("#closeMenu").onclick=closeDrawer;$("#backdrop").onclick=closeDrawer;document.querySelectorAll("#drawer nav a").forEach(a=>a.addEventListener("click",closeDrawer));$("#exploreBtn").onclick=()=>goSchoolPicker(location.hash||"");$("#schoolBack").onclick=()=>{if(state.school){$("#schoolPicker")?.classList.add("hidden");showFirstVisit();const target=pendingRoute||"#home";pendingRoute="";location.hash=target.replace(/^#/ ,"")||"home";route()}else{$("#schoolPicker")?.classList.add("hidden");$("#welcomeScreen")?.classList.remove("hidden");location.hash=""}};$("#skipToolsBtn").onclick=()=>{state.welcomeSeen=true;save();if(location.hash==="#tools")route();else location.hash="tools"};
-  $("#googleSignIn").onclick=()=>startGoogleAuth("welcome");$("#quickSearchBtn")?.addEventListener("click",()=>{const q=$("#fypSearch")?.value||"";if($("#searchInput"))$("#searchInput").value=q;location.hash="search";route();renderResults()});
   onAuthStateChanged(auth,user=>{state.user=user;updateOwnerAccess(user);verifySubscriptionReturn(user);updateAccountUI();if(user){updateAccountUI();try{localStorage.setItem("cbc_user",JSON.stringify({uid:user.uid,name:user.displayName||"",email:user.email||"",photoURL:user.photoURL||""}))}catch{}}else{$("#goDashboardBtn")?.classList.add("hidden");$("#googleSignIn")?.classList.remove("hidden");try{localStorage.removeItem("cbc_user")}catch{}}});
-  $("#signOutBtn").onclick=async()=>{
-    try{if(auth.currentUser)await signOut(auth)}catch(error){console.error("Sign out error",error)}
-    state.user=null;
-    try{localStorage.removeItem("cbc_user")}catch{}
-    save();
-    $("#ownerLogin").textContent="Continue with Google";$("#ownerLogin").classList.remove("hidden");$("#ownerGoDashboard")?.classList.add("hidden");$("#goDashboardBtn")?.classList.add("hidden");
-    $("#authStatus").textContent="";
-    $("#subscriptionStatus").textContent="Google sign-in is required before subscribing.";
-    updateAccountUI();
-    closeDrawer();
-    location.hash="home";
-    route();
-    toast("Signed out.");
-  };
-  getRedirectResult(auth).then(async result=>{if(!result?.user)return;state.user=result.user;const redirectTarget=sessionStorage.getItem("campbiz_auth_target")||"";sessionStorage.removeItem("campbiz_auth_target");try{localStorage.setItem("cbc_user",JSON.stringify({uid:result.user.uid,name:result.user.displayName||"",email:result.user.email||"",photoURL:result.user.photoURL||""}))}catch{}$("#ownerLogin").classList.add("hidden");updateOwnerAccess(result.user);updateAccountUI();if(redirectTarget==="owner"){location.hash="owner";route()}if(sessionStorage.getItem("campbiz_drive_reauth")==="1"){sessionStorage.removeItem("campbiz_drive_reauth");try{await finishDriveConnection(result)}catch(e){console.error("Drive redirect connection failed",e);toast(e.message||"Google Drive connection failed.")}}}).catch(error=>{console.error("Google redirect sign-in error",error);});$("#subscribeAnnual").onclick=startSubscription;$("#adMenu").onclick=openAdComingSoon;window.addEventListener("hashchange",route);
+  getRedirectResult(auth).then(async result=>{if(!result?.user)return;state.user=result.user;const redirectTarget=sessionStorage.getItem("campbiz_auth_target")||"";sessionStorage.removeItem("campbiz_auth_target");try{localStorage.setItem("cbc_user",JSON.stringify({uid:result.user.uid,name:result.user.displayName||"",email:result.user.email||"",photoURL:result.user.photoURL||""}))}catch{}$("#ownerLogin").classList.add("hidden");updateOwnerAccess(result.user);updateAccountUI();if(redirectTarget==="owner"){location.hash="owner";route()}if(sessionStorage.getItem("campbiz_drive_reauth")==="1"){sessionStorage.removeItem("campbiz_drive_reauth");try{await finishDriveConnection(result)}catch(e){console.error("Drive redirect connection failed",e);toast(e.message||"Google Drive connection failed.")}} }).catch(error=>{console.error("Google redirect sign-in error",error);});
+window.addEventListener("hashchange",route);
 document.addEventListener("click",async e=>{
   const el=e.target.closest("[data-action]");
   if(!el||el.disabled)return;
@@ -184,7 +211,7 @@ document.addEventListener("click",async e=>{
     }
   }catch(err){console.error("Button action failed",action,err);toast(err?.message||"That action could not be completed. Please try again.")}
 },{passive:false});
-setup();loadPublishedListings();route();
+bindGlobalUI();setup();loadPublishedListings();route();
 const rotating=["Find food, services and useful businesses around your school.","Compare campus services before you spend.","Save useful businesses for later.","Discover what students around you are using.","Get quick access to free student tools."];let rotateIndex=0;setInterval(()=>{const el=$("#rotatingText");if(!el||$("#welcomeScreen").classList.contains("hidden"))return;rotateIndex=(rotateIndex+1)%rotating.length;el.animate([{opacity:1,transform:"translateY(0)"},{opacity:0,transform:"translateY(8px)"}],{duration:180}).finished.then(()=>{el.textContent=rotating[rotateIndex];el.animate([{opacity:0,transform:"translateY(-8px)"},{opacity:1,transform:"translateY(0)"}],{duration:220})}).catch(()=>{el.textContent=rotating[rotateIndex]})},2800);
 $("#fypSearch").oninput=e=>{if(e.target.value.trim()){$("#searchInput").value=e.target.value;renderResults()}};
 if("serviceWorker" in navigator){

@@ -205,3 +205,14 @@ The existing `/api/storage/upload` serverless function handles Drive status/conn
 - Menu renders the complete category list rather than truncating it to 12.
 - Dashboard uses a 4-step owner workflow and clearer Drive/listing status.
 - API count remains 10.
+
+
+## Merchant reputation and moderation rules
+
+CampBiz merchant reputation is account-level:
+- A merchant has one rating average/count shared by every published listing.
+- Likes are also account-level and one client account can like a merchant once.
+- Listing reviews/comments remain listing-specific and only their count is shown on each listing.
+- Reports are unique per reporting client account and merchant account. The default automatic restriction threshold is 50.
+- Suggested and Trusted merchant flags are calculated from configurable rating, rating-count and like thresholds stored in `campbizSettings/regulations`.
+- CampBiz Admin Studio can enable/disable enforcement and change those thresholds.

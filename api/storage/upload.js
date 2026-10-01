@@ -37,12 +37,55 @@ async function notifyOwner(db, ownerUid, title, body, url){
   if(bad.length){const batch=db.batch();bad.forEach(id=>batch.update(db.collection('fcmTokens').doc(id),{active:false,updatedAt:admin.firestore.FieldValue.serverTimestamp()}));await batch.commit();}
 }
 
+
+const DEFAULT_REGULATIONS={
+  enabled:true,
+  reportBanThreshold:50,
+  suggestedMinRating:4.5,
+  suggestedMinRatings:10,
+  suggestedMinLikes:20,
+  trustedMinRating:4.5,
+  trustedMinRatings:100,
+  trustedMinLikes:100
+};
+async function getCampBizRegulations(db){
+  const snap=await db.collection('campbizSettings').doc('regulations').get();
+  const x=snap.exists?(snap.data()||{}):{};
+  return {...DEFAULT_REGULATIONS,...x,enabled:x.enabled!==false};
+}
+async function storeStatsFor(db,ownerUid){
+  const snap=await db.collection('storeStats').doc(ownerUid).get();
+  const x=snap.exists?(snap.data()||{}):{};
+  return {ownerUid,ratingAvg:Number(x.ratingAvg||0),ratingCount:Number(x.ratingCount||0),ratingTotal:Number(x.ratingTotal||0),likesCount:Number(x.likesCount||0),trustedStore:Boolean(x.trustedStore),suggested:Boolean(x.suggested)};
+}
+async function applyMerchantFlags(db,ownerUid){
+  const regs=await getCampBizRegulations(db);
+  const stats=await storeStatsFor(db,ownerUid);
+  const trusted=stats.ratingAvg>=Number(regs.trustedMinRating)&&stats.ratingCount>=Number(regs.trustedMinRatings)&&stats.likesCount>=Number(regs.trustedMinLikes);
+  const suggested=stats.ratingAvg>=Number(regs.suggestedMinRating)&&stats.ratingCount>=Number(regs.suggestedMinRatings)&&stats.likesCount>=Number(regs.suggestedMinLikes);
+  const next={...stats,trustedStore:trusted,suggested};
+  await db.collection('storeStats').doc(ownerUid).set({
+    ownerUid,ratingAvg:stats.ratingAvg,ratingCount:stats.ratingCount,ratingTotal:stats.ratingTotal,
+    likesCount:stats.likesCount,trustedStore:trusted,suggested,updatedAt:admin.firestore.FieldValue.serverTimestamp()
+  },{merge:true});
+  const listings=await db.collection('publishedListings').where('ownerUid','==',ownerUid).limit(100).get();
+  if(!listings.empty){
+    const batch=db.batch();
+    listings.docs.forEach(d=>batch.set(d.ref,{
+      ratingAvg:stats.ratingAvg,ratingCount:stats.ratingCount,likesCount:stats.likesCount,
+      trustedStore:trusted,suggested,updatedAt:admin.firestore.FieldValue.serverTimestamp()
+    },{merge:true}));
+    await batch.commit();
+  }
+  return next;
+}
+
 module.exports=async function handler(req,res){
  if(req.method==='GET' && String(req.query?.action||'')==='comments'){
   try{const listingId=String(req.query?.listingId||'').trim();if(!listingId)return reply(res,400,{ok:false,error:'listingId is required.'});const app=getAdminApp();const db=admin.firestore(app);const ref=await db.collection('publishedListings').doc(listingId).get();if(!ref.exists||ref.data()?.published!==true)return reply(res,404,{ok:false,error:'Listing not found.'});const ownerUid=String(ref.data()?.ownerUid||ref.data()?.uid||'');const token=await googleAccessToken();const folder=process.env.DRIVE_FOLDER_ID||'1--aiQe2xifD9OAA5h2GbSW8FufHcbMaQ';const file=await driveJsonFile(token,folder,`campbiz-comments-${listingId}.json`,ownerUid);const data=await readDriveJson(token,file.id);const comments=Array.isArray(data.comments)?data.comments.slice(-100):[];return reply(res,200,{ok:true,count:comments.length,comments})}catch(e){console.error('Comments read error',e);return reply(res,500,{ok:false,error:'Unable to load comments.'})}
  }
  if(req.method==='GET' && String(req.query?.action||'')==='list'){
-  try{const school=String(req.query?.school||'').trim();if(!school)return reply(res,400,{ok:false,error:'Choose a school before loading listings.'});const app=getAdminApp();const snap=await admin.firestore(app).collection('publishedListings').where('school','==',school).limit(300).get();const listings=[];snap.forEach(doc=>{const d=doc.data()||{};if(d.published===true)listings.push({id:doc.id,...d,createdAt:d.createdAt?.toDate?.()?.toISOString?.()||null,updatedAt:d.updatedAt?.toDate?.()?.toISOString?.()||null});});listings.sort((a,b)=>String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||'')));return reply(res,200,{ok:true,school,listings})}catch(e){console.error('Published listings read error',e);return reply(res,500,{ok:false,error:'Unable to load published listings for this school.'})}
+  try{const school=String(req.query?.school||'').trim();if(!school)return reply(res,400,{ok:false,error:'Choose a school before loading listings.'});const app=getAdminApp();const snap=await admin.firestore(app).collection('publishedListings').where('school','==',school).limit(300).get();const statsSnap=await admin.firestore(app).collection('storeStats').limit(1000).get();const statsMap=new Map(statsSnap.docs.map(d=>[d.id,d.data()||{}]));const listings=[];snap.forEach(doc=>{const d=doc.data()||{};const ownerUid=String(d.ownerUid||d.uid||'');const st=statsMap.get(ownerUid)||{};if(d.published===true&&d.banned!==true)listings.push({id:doc.id,...d,ratingAvg:Number(st.ratingAvg??d.ratingAvg??0),ratingCount:Number(st.ratingCount??d.ratingCount??0),likesCount:Number(st.likesCount??d.likesCount??0),trustedStore:Boolean(st.trustedStore??d.trustedStore),suggested:Boolean(st.suggested??d.suggested),createdAt:d.createdAt?.toDate?.()?.toISOString?.()||null,updatedAt:d.updatedAt?.toDate?.()?.toISOString?.()||null});});listings.sort((a,b)=>Number(Boolean(b.suggested))-Number(Boolean(a.suggested))||Number(b.ratingAvg||0)-Number(a.ratingAvg||0)||Number(b.likesCount||0)-Number(a.likesCount||0)||String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||'')));return reply(res,200,{ok:true,school,listings})}catch(e){console.error('Published listings read error',e);return reply(res,500,{ok:false,error:'Unable to load published listings for this school.'})}
  }
  if(req.method!=='POST'){res.setHeader('Allow','POST');return reply(res,405,{ok:false,error:'Method not allowed.'})}
  try{
@@ -59,13 +102,33 @@ module.exports=async function handler(req,res){
     return reply(res,200,{ok:true,connected:true,email:decoded.email||null});
   }
   if(action==='rateStore'){
-    const ownerUid=String(req.body?.ownerUid||'').trim();const rating=Number(req.body?.rating);if(!ownerUid||ownerUid===decoded.uid||![1,2,3,4,5].includes(rating))return reply(res,400,{ok:false,error:'A valid client store rating is required.'});
-    const owner=await db.collection('publishedListings').where('ownerUid','==',ownerUid).where('published','==',true).limit(1).get();if(owner.empty)return reply(res,404,{ok:false,error:'Store not found.'});
+    const ownerUid=String(req.body?.ownerUid||'').trim();const rating=Number(req.body?.rating);
+    if(!ownerUid||ownerUid===decoded.uid||![1,2,3,4,5].includes(rating))return reply(res,400,{ok:false,error:'A valid client store rating is required.'});
+    const owner=await db.collection('publishedListings').where('ownerUid','==',ownerUid).limit(1).get();if(owner.empty||owner.docs[0].data()?.published!==true||owner.docs[0].data()?.banned===true)return reply(res,404,{ok:false,error:'Store not found.'});
     const ratingRef=db.collection('storeRatings').doc(`${ownerUid}_${decoded.uid}`);const statsRef=db.collection('storeStats').doc(ownerUid);let stats;
-    await db.runTransaction(async tx=>{const oldSnap=await tx.get(ratingRef);const statsSnap=await tx.get(statsRef);const old=oldSnap.exists?Number(oldSnap.data()?.rating||0):0;const cur=statsSnap.exists?statsSnap.data()||{}:{};let count=Number(cur.ratingCount||0),total=Number(cur.ratingTotal||0);if(old){total=total-old+rating}else{count+=1;total+=rating}const avg=count?Math.round((total/count)*10)/10:0;stats={ratingAvg:avg,ratingCount:count,ratingTotal:total,trustedStore:count>=100&&avg>=4.5,updatedAt:admin.firestore.FieldValue.serverTimestamp()};tx.set(ratingRef,{ownerUid,clientUid:decoded.uid,rating,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});tx.set(statsRef,{ownerUid,...stats},{merge:true});});
-    const listings=await db.collection('publishedListings').where('ownerUid','==',ownerUid).where('published','==',true).limit(100).get();const batch=db.batch();listings.docs.forEach(d=>batch.update(d.ref,{ratingAvg:stats.ratingAvg,ratingCount:stats.ratingCount,trustedStore:stats.trustedStore}));await batch.commit();return reply(res,200,{ok:true,...stats,message:'Your store rating was saved. You can only keep one rating per client account.'});
+    await db.runTransaction(async tx=>{const oldSnap=await tx.get(ratingRef);const statsSnap=await tx.get(statsRef);const old=oldSnap.exists?Number(oldSnap.data()?.rating||0):0;const cur=statsSnap.exists?statsSnap.data()||{}:{};let count=Number(cur.ratingCount||0),total=Number(cur.ratingTotal||0);if(old){total=total-old+rating}else{count+=1;total+=rating}const avg=count?Math.round((total/count)*10)/10:0;stats={ratingAvg:avg,ratingCount:count,ratingTotal:total,likesCount:Number(cur.likesCount||0),updatedAt:admin.firestore.FieldValue.serverTimestamp()};tx.set(ratingRef,{ownerUid,clientUid:decoded.uid,rating,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});tx.set(statsRef,{ownerUid,...stats},{merge:true});});
+    const flags=await applyMerchantFlags(db,ownerUid);
+    return reply(res,200,{ok:true,...flags,message:'Your store rating was saved. You can only keep one rating per client account.'});
   }
-  if(action==='comment'){
+  if(action==='likeStore'){
+    const ownerUid=String(req.body?.ownerUid||'').trim();if(!ownerUid||ownerUid===decoded.uid)return reply(res,400,{ok:false,error:'A valid store is required.'});
+    const owner=await db.collection('publishedListings').where('ownerUid','==',ownerUid).limit(1).get();if(owner.empty||owner.docs[0].data()?.published!==true||owner.docs[0].data()?.banned===true)return reply(res,404,{ok:false,error:'Store not found.'});
+    const likeRef=db.collection('storeLikes').doc(`${ownerUid}_${decoded.uid}`);const statsRef=db.collection('storeStats').doc(ownerUid);let liked=false;
+    await db.runTransaction(async tx=>{const old=await tx.get(likeRef);const statsSnap=await tx.get(statsRef);const cur=statsSnap.exists?statsSnap.data()||{}:{};let likes=Math.max(0,Number(cur.likesCount||0));if(old.exists){tx.delete(likeRef);likes=Math.max(0,likes-1);liked=false}else{tx.set(likeRef,{ownerUid,clientUid:decoded.uid,createdAt:admin.firestore.FieldValue.serverTimestamp()});likes+=1;liked=true}tx.set(statsRef,{ownerUid,likesCount:likes,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});});
+    const flags=await applyMerchantFlags(db,ownerUid);
+    return reply(res,200,{ok:true,liked,likesCount:flags.likesCount,trustedStore:flags.trustedStore,suggested:flags.suggested});
+  }
+  if(action==='reportStore'){
+    const ownerUid=String(req.body?.ownerUid||'').trim();const reason=String(req.body?.reason||'').trim().slice(0,80);
+    const allowed=['Spam or misleading listing','Scam or fraud concern','Harassment or inappropriate content','Fake business or impersonation','Unsafe or prohibited service','Incorrect business information','Other'];
+    if(!ownerUid||ownerUid===decoded.uid||!allowed.includes(reason))return reply(res,400,{ok:false,error:'Choose a valid report reason.'});
+    const owner=await db.collection('publishedListings').where('ownerUid','==',ownerUid).limit(1).get();if(owner.empty||owner.docs[0].data()?.published!==true||owner.docs[0].data()?.banned===true)return reply(res,404,{ok:false,error:'Store not found.'});
+    const regs=await getCampBizRegulations(db);const reportRef=db.collection('storeReports').doc(`${ownerUid}_${decoded.uid}`);let reportCount=0,banned=false,created=false;
+    await db.runTransaction(async tx=>{const existing=await tx.get(reportRef);const statsRef=db.collection('storeStats').doc(ownerUid);const statsSnap=await tx.get(statsRef);const cur=statsSnap.exists?statsSnap.data()||{}:{};if(existing.exists){throw Object.assign(new Error('You have already reported this store.'),{status:409})}reportCount=Number(cur.reportCount||0)+1;banned=Boolean(cur.banned)||(regs.enabled&&reportCount>=Number(regs.reportBanThreshold));tx.set(reportRef,{ownerUid,reporterUid:decoded.uid,reason,createdAt:admin.firestore.FieldValue.serverTimestamp()});tx.set(statsRef,{ownerUid,reportCount,banned,updatedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true});created=true});
+    if(banned){const listings=await db.collection('publishedListings').where('ownerUid','==',ownerUid).limit(100).get();if(!listings.empty){const batch=db.batch();listings.docs.forEach(d=>batch.set(d.ref,{banned:true,published:false,bannedAt:admin.firestore.FieldValue.serverTimestamp()},{merge:true}));await batch.commit()}}
+    return reply(res,200,{ok:true,created,reportCount,banned,message:banned?'This account has reached the report threshold and has been restricted.':'Report received. Our moderation rules count one report per client account.'});
+  }
+  if(action==='comment'||action==='review'){
     const listingId=String(req.body?.listingId||'').trim();const text=String(req.body?.text||'').trim().replace(/\s+/g,' ');if(!listingId||text.length<2||text.length>500)return reply(res,400,{ok:false,error:'Write a comment between 2 and 500 characters.'});const ref=await db.collection('publishedListings').doc(listingId).get();if(!ref.exists||ref.data()?.published!==true)return reply(res,404,{ok:false,error:'Listing not found.'});const listing=ref.data()||{};const ownerUid=String(listing.ownerUid||listing.uid||'');if(!ownerUid)return reply(res,400,{ok:false,error:'This listing has no store owner.'});const token=await googleAccessToken();const folder=process.env.DRIVE_FOLDER_ID||'1--aiQe2xifD9OAA5h2GbSW8FufHcbMaQ';const file=await driveJsonFile(token,folder,`campbiz-comments-${listingId}.json`,ownerUid);const data=await readDriveJson(token,file.id);const comments=Array.isArray(data.comments)?data.comments:[];const comment={id:crypto.randomUUID(),uid:decoded.uid,displayName:String(decoded.name||decoded.email||'CampBiz client').slice(0,80),text,createdAt:new Date().toISOString()};comments.push(comment);while(comments.length>100)comments.shift();await writeDriveJson(token,file.id,{version:1,listingId,ownerUid,comments});await db.collection('publishedListings').doc(listingId).set({commentFileId:file.id,commentCount:comments.length,commentNotificationBatchCount:Math.floor(comments.length/10)},{merge:true});if(comments.length>0&&comments.length%10===0){await notifyOwner(db,ownerUid,`New CampBiz comments · ${comments.length}`,`You have reached ${comments.length} comments on your listing. Tap to open the comments section.`,`${process.env.APP_URL||'https://campbiz.vercel.app'}/?focus=comments#businessView/${encodeURIComponent(listingId)}`)}return reply(res,200,{ok:true,count:comments.length,message:'Your comment is sent.'});
   }
   const connection=await db.collection('driveConnections').doc(decoded.uid).get();if(!connection.exists||connection.data()?.connected!==true)return reply(res,403,{ok:false,error:'Connect Google Drive before uploading business media.'});
@@ -79,7 +142,7 @@ module.exports=async function handler(req,res){
     if(images.length>100)return reply(res,400,{ok:false,error:'A Pro listing can contain up to 100 product images.'});if(images.some(url=>!String(url).startsWith('https://drive.google.com/')))return reply(res,400,{ok:false,error:'Product images must be stored in CampBiz Google Drive storage.'});if(!Number.isFinite(Number(listing.priceFrom))||Number(listing.priceFrom)<=0)return reply(res,400,{ok:false,error:'Starting price must be greater than zero.'});if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(listing.email).trim()))return reply(res,400,{ok:false,error:'Enter a valid business email address.'});if(String(listing.website||'').trim()){try{const u=new URL(String(listing.website).trim());if(!['http:','https:'].includes(u.protocol))throw new Error('bad')}catch{return reply(res,400,{ok:false,error:'Website must start with http:// or https://.'})}}
     const billing=await db.collection('billingCustomers').doc(decoded.uid).get();const bd=billing.exists?billing.data()||{}:{};const now=Date.now();const trialEnd=bd.trialEndsAt?.toMillis?.()||0;const subEnd=bd.subscriptionEndsAt?.toMillis?.()||0;const active=['active','non_renewing','attention'].includes(String(bd.subscriptionStatus||''))&&subEnd>now;const trialActive=!active&&trialEnd>now;const isPro=active||trialActive||String(bd.plan||bd.selectedPlan||'')==='lifetime';
     if(images.length>7&&!isPro)return reply(res,403,{ok:false,error:'Free listings allow up to 7 product images. Upgrade to Pro for the larger gallery.'});
-    const clean={id:`owner_${decoded.uid}`,uid:decoded.uid,businessName:String(listing.businessName).trim().slice(0,80),school:String(listing.school).trim().slice(0,120),category:String(listing.category).trim().slice(0,80),shortDescription:String(listing.shortDescription).trim().slice(0,140),description:String(listing.description).trim().slice(0,1200),priceFrom:Number(listing.priceFrom)||0,priceRange:String(listing.priceRange).trim().slice(0,80),address:String(listing.address).trim().slice(0,180),hours:String(listing.hours).trim().slice(0,180),delivery:String(listing.delivery||'By arrangement').trim().slice(0,120),whatsapp:String(listing.whatsapp).trim().slice(0,40),email:String(listing.email).trim().slice(0,160),website:String(listing.website||'').trim().slice(0,300),featuredImageUrl:String(listing.featuredImageUrl),featuredImageId:listing.featuredImageId||null,productImages:images.slice(0,isPro?100:7),published:true,ownerUid:decoded.uid,updatedAt:admin.firestore.FieldValue.serverTimestamp()};
+    const clean={id:`owner_${decoded.uid}`,uid:decoded.uid,businessName:String(listing.businessName).trim().slice(0,80),school:String(listing.school).trim().slice(0,120),category:String(listing.category).trim().slice(0,80),shortDescription:String(listing.shortDescription).trim().slice(0,140),description:String(listing.description).trim().slice(0,1200),priceFrom:Number(listing.priceFrom)||0,priceRange:String(listing.priceRange).trim().slice(0,80),address:String(listing.address).trim().slice(0,180),hours:String(listing.hours).trim().slice(0,180),delivery:String(listing.delivery||'By arrangement').trim().slice(0,120),whatsapp:String(listing.whatsapp).trim().slice(0,40),email:String(listing.email).trim().slice(0,160),website:String(listing.website||'').trim().slice(0,300),featuredImageUrl:String(listing.featuredImageUrl),featuredImageId:listing.featuredImageId||null,productImages:images.slice(0,isPro?100:7),published:true,ownerUid:decoded.uid,ratingAvg:0,ratingCount:0,likesCount:0,trustedStore:false,suggested:false,banned:false,updatedAt:admin.firestore.FieldValue.serverTimestamp()};
     const ref=db.collection('publishedListings').doc(clean.id);const old=await ref.get();if(!old.exists)clean.createdAt=admin.firestore.FieldValue.serverTimestamp();await ref.set(clean,{merge:true});return reply(res,200,{ok:true,id:clean.id,publishedAt:new Date().toISOString(),imageCount:clean.productImages.length});
   }
   const folder=process.env.DRIVE_FOLDER_ID||'1--aiQe2xifD9OAA5h2GbSW8FufHcbMaQ';const{fileName,mimeType,data}=req.body||{};if(typeof fileName!=='string'||fileName.length<1||fileName.length>180||typeof mimeType!=='string'||typeof data!=='string')return reply(res,400,{ok:false,error:'fileName, mimeType and base64 data are required.'});
